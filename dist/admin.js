@@ -1,16 +1,812 @@
-(()=>{var a=(()=>{let o='<span class="spinner-border spinner-border-sm my-0 ms-0 me-1 p-0" style="height: 0.8rem; width: 0.8rem;"></span>',d=[["*",'<strong class="text-theme-auto">$1</strong>'],["_",'<em class="text-theme-auto">$1</em>'],["~",'<del class="text-theme-auto">$1</del>'],["```",'<code class="font-monospace text-theme-auto">$1</code>']],f=[{type:"Mobile",regex:/Android.*Mobile|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i},{type:"Tablet",regex:/iPad|Android(?!.*Mobile)|Tablet/i},{type:"Desktop",regex:/Windows NT|Macintosh|Linux/i}],u=[{name:"Chrome",regex:/Chrome|CriOS/i},{name:"Safari",regex:/Safari/i},{name:"Edge",regex:/Edg|Edge/i},{name:"Firefox",regex:/Firefox|FxiOS/i},{name:"Opera",regex:/Opera|OPR/i},{name:"Internet Explorer",regex:/MSIE|Trident/i},{name:"Samsung Browser",regex:/SamsungBrowser/i}],w=[{name:"Windows",regex:/Windows NT ([\d.]+)/i},{name:"MacOS",regex:/Mac OS X ([\d_.]+)/i},{name:"Android",regex:/Android ([\d.]+)/i},{name:"iOS",regex:/OS ([\d_]+) like Mac OS X/i},{name:"Linux",regex:/Linux/i},{name:"Ubuntu",regex:/Ubuntu/i},{name:"Chrome OS",regex:/CrOS/i}],p=e=>String(e).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"),g=e=>{let t=s=>{window.alert(`${s} ${e}`)};return{success:()=>t("\u{1F7E9}"),error:()=>t("\u{1F7E5}"),warning:()=>t("\u{1F7E8}"),info:()=>t("\u{1F7E6}"),custom:s=>t(s)}},L=e=>window.confirm(`\u{1F7E6} ${e}`),b=(e,t)=>(e.replaceChildren(document.createRange().createContextualFragment(t)),e),E=(e,t,s=.05)=>new Promise(h=>{let C=parseFloat(e.style.opacity),I=t?1:0,A=()=>{C+=t?s:-s,C=Math.max(0,Math.min(1,C)),e.style.opacity=C.toFixed(2),t&&C>=I||!t&&C<=I?(e.style.opacity=I.toString(),h(e)):requestAnimationFrame(A)};requestAnimationFrame(A)}),m=(e,t=0)=>{let s=null;s=setTimeout(()=>{e(),clearTimeout(s),s=null},t)};return{loader:o,ask:L,copy:async(e,t=null,s=1500)=>{let h=e.getAttribute("data-copy");if(!h||h.length===0){g("Nothing to copy").warning();return}e.disabled=!0;try{await navigator.clipboard.writeText(h)}catch{e.disabled=!1,g("Failed to copy").error();return}let C=e.innerHTML;b(e,t||'<i class="fa-solid fa-check"></i>'),m(()=>{e.disabled=!1,e.innerHTML=C},s)},notify:g,timeOut:m,debounce:(e,t=100)=>{let s=null;return(...h)=>{clearTimeout(s),s=setTimeout(()=>e(...h),t)}},escapeHtml:p,base64Encode:e=>{let s=new TextEncoder().encode(e);return window.btoa(String.fromCharCode(...s))},base64Decode:e=>{let t=new TextDecoder,s=Uint8Array.from(window.atob(e),h=>h.charCodeAt(0));return t.decode(s)},disableButton:(e,t="Loading",s=!1)=>{e.disabled=!0;let h=e.innerHTML;return b(e,s?t:o+t),{restore:(C=!1)=>{e.innerHTML=h,e.disabled=C}}},disableCheckbox:e=>{e.disabled=!0;let t=document.querySelector(`label[for="${e.id}"]`),s=t.innerHTML;return b(t,o+s),{restore:()=>{t.innerHTML=s,e.disabled=!1}}},safeInnerHTML:b,parseUserAgent:e=>{if(!e||typeof e!="string")return"Unknown";let t=f.find(A=>A.regex.test(e))?.type??"Unknown",s=u.find(A=>A.regex.test(e))?.name??"Unknown",h=w.find(A=>A.regex.test(e)),C=h?h.name:"Unknown",I=h?e.match(h.regex)?.[1]?.replace(/_/g,".")??null:null;return`${s} ${t} ${I?`${C} ${I}`:C}`},changeOpacity:E,getGMTOffset:e=>{let t=new Date,s=new Intl.DateTimeFormat("en-US",{timeZone:e,hourCycle:"h23",hour:"numeric"}),h=(parseInt(s.format(t))-t.getUTCHours()+24)%24;return h>12&&(h-=24),`GMT${h>=0?"+":""}${h}`},convertMarkdownToHTML:e=>(d.forEach(([t,s])=>{e=e.replace(new RegExp(`\\${t}(\\S(?:[\\s\\S]*?\\S)?)\\${t}`,"g"),s)}),e)}})();var X={tab:f=>window.bootstrap.Tab.getOrCreateInstance(document.getElementById(f)),modal:f=>window.bootstrap.Modal.getOrCreateInstance(document.getElementById(f))};var q=(()=>{let o=({uuid:m,own:T,name:H,presence:$,comment:n,created_at:l,is_admin:y,is_parent:k,gif_url:v,ip:r,user_agent:e,comments:t,like_count:s})=>({uuid:m,own:T,name:H,presence:$,comment:n,created_at:l,is_admin:y??!1,is_parent:k,gif_url:v,ip:r,user_agent:e,comments:t?.map(o)??[],like_count:s??0}),d=m=>m.map(o);return{uuidResponse:({uuid:m})=>({uuid:m}),tokenResponse:({token:m})=>({token:m}),statusResponse:({status:m})=>({status:m}),getCommentResponse:o,getCommentsResponse:d,getCommentsResponseV2:m=>({count:m.count,lists:d(m.lists)}),commentShowMore:(m,T=!1)=>({uuid:m,show:T}),postCommentRequest:(m,T,H,$,n)=>({id:m,name:T,presence:H,comment:$,gif_id:n}),postSessionRequest:(m,T)=>({email:m,password:T}),updateCommentRequest:(m,T,H)=>({presence:m,comment:T,gif_id:H})}})();var R=o=>{let d=(g=null)=>{let L=JSON.parse(localStorage.getItem(o));return g?L[String(g)]:L},f=(g,L)=>{let b=d();b[String(g)]=L,localStorage.setItem(o,JSON.stringify(b))},u=g=>Object.keys(d()).includes(String(g)),w=g=>{if(!u(g))return;let L=d();delete L[String(g)],localStorage.setItem(o,JSON.stringify(L))},p=()=>localStorage.setItem(o,"{}");return localStorage.getItem(o)||p(),{set:f,get:d,has:u,clear:p,unset:w}};var z="GET",se="PUT",Y="POST",W="PATCH",de="DELETE";var ne="AbortError",Te="TypeError",oe={Accept:"application/json","Content-Type":"application/json"},ue="request",me=(()=>{let o=null;return{getInstance:()=>(o||(o=window.caches.open(ue)),o),purge:()=>{o=null}}})(),fe=async()=>{window.isSecureContext&&(me.purge(),await window.caches.delete(ue))},Q=o=>({set:(w,p,g,L)=>p.clone().arrayBuffer().then(b=>{if(!p.ok||!window.isSecureContext)return p;let E=new Date,m=new Headers(p.headers);if(m.has("Date")||m.set("Date",E.toUTCString()),g||!m.has("Cache-Control")){if(!g&&m.has("Expires")){let T=new Date(m.get("Expires"));L=Math.max(0,T.getTime()-E.getTime())}m.set("Cache-Control",`public, max-age=${Math.floor(L/1e3)}`)}return m.has("Content-Length")||m.set("Content-Length",String(b.byteLength)),o.put(w,new Response(b,{headers:m})).then(()=>p)}),has:w=>o.match(w).then(p=>{if(!p)return null;let g=p.headers.get("Cache-Control").match(/max-age=(\d+)/)[1],L=Date.parse(p.headers.get("Date"))+parseInt(g)*1e3;return Date.now()>L?null:p}),del:w=>o.delete(w)}),P=(o,d)=>{let f=new AbortController,u={signal:f.signal,credential:"include",headers:new Headers(oe),method:String(o).toUpperCase()};window.addEventListener("offline",()=>f.abort(),{once:!0}),window.addEventListener("popstate",()=>f.abort(),{once:!0});let w=0,p=0,g=0,L=0,b=!1,E=null,m=null,T=null,H=n=>{let l=()=>{let k=()=>window.fetch(n,u).then(async v=>{if(!v.ok||!T)return v;let r=parseInt(v.headers.get("Content-Length")??0);if(r===0)return v;let e=[],t=0,s=v.body.getReader();for(;;){let{done:C,value:I}=await s.read();if(C)break;e.push(I),t+=I.length,await T(t,r,window.structuredClone?window.structuredClone(e):e)}let h=v.headers.get("Content-Type")??"application/octet-stream";return new Response(new Blob(e,{type:h}),{status:v.status,statusText:v.statusText,headers:new Headers(v.headers)})});return w===0||!window.isSecureContext?k():u.method!==z?(console.warn("Only method GET can be cached"),k()):me.getInstance().then(Q).then(v=>v.has(n).then(r=>r?Promise.resolve(r):v.del(n).then(k).then(e=>v.set(n,e,b,w))))};if(p===0&&g===0)return l();let y=async()=>{try{return await l()}catch(k){if(k.name===ne)throw k;if(g*=2,L++,L>p)throw new Error(`Max retries reached: ${k}`);return console.warn(`Retrying fetch (${L}/${p}): ${n.toString()}`),await new Promise(v=>window.setTimeout(v,g)),y()}};return y()},$=n=>{if(n.status!==200)return n;let l=document.querySelector("a[download]");l&&document.body.removeChild(l);let y=n.headers.get("Content-Disposition")?.match(/filename="(.+)"/)?.[1];return n.clone().blob().then(k=>{let v=document.createElement("a"),r=window.URL.createObjectURL(k);return v.href=r,v.download=y||`${m}.${E||(k.type.split("/")?.[1]??"bin")}`,document.body.appendChild(v),v.click(),document.body.removeChild(v),window.URL.revokeObjectURL(r),n})};return{send(n=null){return m&&Object.keys(oe).forEach(l=>u.headers.delete(l)),H(new URL(d,document.body.getAttribute("data-url"))).then(l=>m&&l.ok?{code:l.status,data:$(l),error:null}:l.json().then(y=>{if(y.error){let k=y.error.at(0),v=l.status>=500;throw new Error(v?`ID: ${y.id}
-\u{1F7E5} ${k}`:`\u{1F7E8} ${k}`)}return n&&(y.data=n(y.data)),Object.assign(y,{code:l.status})})).catch(l=>{if(l.name===ne)return console.warn("Fetch aborted:",l),l;throw l.name===Te&&(l=new Error("\u{1F7E5} Network error or rate limit exceeded")),alert(l.message||String(l)),l})},withCache(n=1e3*60*60*6){return w=n,this},withForceCache(){return b=!0,this},withRetry(n=3,l=1e3){return p=n,g=l,this},withCancel(n){return n==null?this:((async()=>(await n,f.abort()))(),this)},withDownload(n,l=null){return m=n,E=l,this},withProgressFunc(n=null){return T=n,this},default(n=null){return u.headers=new Headers(n??{}),H(d).then(l=>m?$(l):l)},token(n){return n.split(".").length===3?(u.headers.append("Authorization","Bearer "+n),this):(u.headers.append("x-access-key",n),this)},body(n){if(u.method===z)throw new Error("GET method does not support body");return u.body=JSON.stringify(n),this}}};var S=(()=>{let o=null,d=()=>o.get("token"),f=E=>o.set("token",E),u=E=>P(Y,"/api/session").body(E).send(q.tokenResponse).then(m=>(m.code===200&&f(m.data.token),m.code===200)),w=()=>o.unset("token"),p=()=>String(d()??".").split(".").length===3;return{init:()=>{o=R("session")},guest:E=>P(z,"/api/v2/config").withCache(1e3*60*30).withForceCache().token(E).send().then(m=>{if(m.code!==200)throw new Error("failed to get config.");let T=R("config");for(let[H,$]of Object.entries(m.data))T.set(H,$);return f(E),m}),login:u,logout:w,decode:()=>{if(!p())return null;try{return JSON.parse(a.base64Decode(d().split(".")[1]))}catch{return null}},isAdmin:p,setToken:f,getToken:d}})();var Z=(()=>{let o=null,d=g=>{let L=a.disableButton(g),b=document.getElementById("loginEmail"),E=document.getElementById("loginPassword");b.disabled=!0,E.disabled=!0,S.login(q.postSessionRequest(b.value,E.value)).then(m=>{m&&(b.value=null,E.value=null,X.modal("mainModal").hide())}).finally(()=>{L.restore(),b.disabled=!1,E.disabled=!1})},f=async()=>{await fe(),o.clear(),S.logout(),X.modal("mainModal").show()};return{init:()=>{o=R("user")},login:d,clearSession:f,getDetailUser:()=>P(z,"/api/user").token(S.getToken()).send().then(g=>{if(g.code!==200)throw new Error("failed to get user.");return Object.entries(g.data).forEach(([L,b])=>o.set(L,b)),g}).catch(g=>(f(),g)),getUserStorage:()=>o}})();var ge=(()=>{let o=(u,w)=>{document.querySelectorAll(".navbar button").forEach(p=>{p.classList.contains("active")&&p.classList.remove("active")}),X.tab(w).show(),u.classList.add("active")};return{buttonNavHome:u=>{o(u,"button-home")},buttonNavSetting:u=>{o(u,"button-setting")}}})();var ae=(()=>{let o={"#000000":"#ffffff","#ffffff":"#000000","#212529":"#f8f9fa","#f8f9fa":"#212529"},d=["#ffffff","#f8f9fa"],f=["#000000","#212529"],u=!1,w=null,p=null,g=()=>w.set("active","light"),L=()=>w.set("active","dark"),b=y=>{let k=p.getAttribute("content");p.setAttribute("content",y.some(v=>v===k)?o[k]:k)},E=()=>{g(),document.documentElement.setAttribute("data-bs-theme","light"),b(f)},m=()=>{L(),document.documentElement.setAttribute("data-bs-theme","dark"),b(d)},T=(y=null,k=null)=>{let v=w.get("active")==="dark";return y&&k?v?y:k:v};return{init:()=>{switch(w=R("theme"),p=document.querySelector('meta[name="theme-color"]'),w.has("active")||(window.matchMedia("(prefers-color-scheme: dark)").matches?L():g()),document.documentElement.getAttribute("data-bs-theme")){case"dark":L();break;case"light":g();break;default:u=!0}T()?m():E()},spyTop:()=>{let y=v=>v.filter(r=>r.isIntersecting).forEach(r=>{let e=r.target.classList.contains("bg-white-black")?T(f[0],d[0]):T(f[1],d[1]);p.setAttribute("content",e)}),k=new IntersectionObserver(y,{rootMargin:"0% 0% -95% 0%"});document.querySelectorAll("section").forEach(v=>k.observe(v))},change:()=>T()?E():m(),isDarkMode:T,isAutoMode:()=>u}})();var V=(()=>{let o={id:"ID",en:"US",fr:"FR",de:"DE",es:"ES",zh:"CN",ja:"JP",ko:"KR",ar:"SA",ru:"RU",it:"IT",nl:"NL",pt:"PT",tr:"TR",th:"TH",vi:"VN",ms:"MY",hi:"IN"},d=null,f=null,u=null,w=null;return{on(p,g){return w.set(p,g),this},get(){let p=w.get(u);return w.clear(),p},getCountry(){return d},getLocale(){return f},getLanguage(){return u},setDefault(p){let g=!0;o[p]||(g=!1,console.warn("Language not found, please add manually in countryMapping")),d=g?o[p]:"US",u=g?p:"en",f=`${u}_${d}`},init(){w=new Map,this.setDefault(navigator.language.split("-").shift())}}})();var pe=(()=>{let o=null,d=!0,f=["input[data-offline-disabled]","button[data-offline-disabled]","select[data-offline-disabled]","textarea[data-offline-disabled]"],u=()=>d,w=()=>{let T=o.firstElementChild.firstElementChild;T.classList.remove("bg-success"),T.classList.add("bg-danger"),T.firstElementChild.innerHTML='<i class="fa-solid fa-ban me-2"></i>Koneksi tidak tersedia'},p=()=>{let T=o.firstElementChild.firstElementChild;T.classList.remove("bg-danger"),T.classList.add("bg-success"),T.firstElementChild.innerHTML='<i class="fa-solid fa-cloud me-2"></i>Koneksi tersedia kembali'},g=async()=>{d&&(await a.changeOpacity(o,!1),w())},L=()=>{document.querySelectorAll(f.join(", ")).forEach(T=>{T.dispatchEvent(new Event(u()?"online":"offline")),T.setAttribute("data-offline-disabled",u()?"false":"true"),T.tagName==="BUTTON"?u()?T.classList.remove("disabled"):T.classList.add("disabled"):u()?T.removeAttribute("disabled"):T.setAttribute("disabled","true")})},b=()=>{d=!1,w(),a.changeOpacity(o,!0),L()},E=()=>{d=!0,p(),a.timeOut(g,3e3),L()};return{init:()=>{window.addEventListener("online",E),window.addEventListener("offline",b),o=document.createElement("div"),o.classList.add("fixed-top","pe-none"),o.style.cssText="opacity: 0; z-index: 1057;",o.innerHTML=`
+(() => {
+    var a = (() => {
+        let o = '<span class="spinner-border spinner-border-sm my-0 ms-0 me-1 p-0" style="height: 0.8rem; width: 0.8rem;"></span>',
+            d = [
+                ["*", '<strong class="text-theme-auto">$1</strong>'],
+                ["_", '<em class="text-theme-auto">$1</em>'],
+                ["~", '<del class="text-theme-auto">$1</del>'],
+                ["```", '<code class="font-monospace text-theme-auto">$1</code>']
+            ],
+            f = [{
+                type: "Mobile",
+                regex: /Android.*Mobile|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i
+            }, {
+                type: "Tablet",
+                regex: /iPad|Android(?!.*Mobile)|Tablet/i
+            }, {
+                type: "Desktop",
+                regex: /Windows NT|Macintosh|Linux/i
+            }],
+            u = [{
+                name: "Chrome",
+                regex: /Chrome|CriOS/i
+            }, {
+                name: "Safari",
+                regex: /Safari/i
+            }, {
+                name: "Edge",
+                regex: /Edg|Edge/i
+            }, {
+                name: "Firefox",
+                regex: /Firefox|FxiOS/i
+            }, {
+                name: "Opera",
+                regex: /Opera|OPR/i
+            }, {
+                name: "Internet Explorer",
+                regex: /MSIE|Trident/i
+            }, {
+                name: "Samsung Browser",
+                regex: /SamsungBrowser/i
+            }],
+            w = [{
+                name: "Windows",
+                regex: /Windows NT ([\d.]+)/i
+            }, {
+                name: "MacOS",
+                regex: /Mac OS X ([\d_.]+)/i
+            }, {
+                name: "Android",
+                regex: /Android ([\d.]+)/i
+            }, {
+                name: "iOS",
+                regex: /OS ([\d_]+) like Mac OS X/i
+            }, {
+                name: "Linux",
+                regex: /Linux/i
+            }, {
+                name: "Ubuntu",
+                regex: /Ubuntu/i
+            }, {
+                name: "Chrome OS",
+                regex: /CrOS/i
+            }],
+            p = e => String(e).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"),
+            g = e => {
+                let t = s => {
+                    window.alert(`${s} ${e}`)
+                };
+                return {
+                    success: () => t("\u{1F7E9}"),
+                    error: () => t("\u{1F7E5}"),
+                    warning: () => t("\u{1F7E8}"),
+                    info: () => t("\u{1F7E6}"),
+                    custom: s => t(s)
+                }
+            },
+            L = e => window.confirm(`\u{1F7E6} ${e}`),
+            b = (e, t) => (e.replaceChildren(document.createRange().createContextualFragment(t)), e),
+            E = (e, t, s = .05) => new Promise(h => {
+                let C = parseFloat(e.style.opacity),
+                    I = t ? 1 : 0,
+                    A = () => {
+                        C += t ? s : -s, C = Math.max(0, Math.min(1, C)), e.style.opacity = C.toFixed(2), t && C >= I || !t && C <= I ? (e.style.opacity = I.toString(), h(e)) : requestAnimationFrame(A)
+                    };
+                requestAnimationFrame(A)
+            }),
+            m = (e, t = 0) => {
+                let s = null;
+                s = setTimeout(() => {
+                    e(), clearTimeout(s), s = null
+                }, t)
+            };
+        return {
+            loader: o,
+            ask: L,
+            copy: async (e, t = null, s = 1500) => {
+                let h = e.getAttribute("data-copy");
+                if (!h || h.length === 0) {
+                    g("Nothing to copy").warning();
+                    return
+                }
+                e.disabled = !0;
+                try {
+                    await navigator.clipboard.writeText(h)
+                } catch {
+                    e.disabled = !1, g("Failed to copy").error();
+                    return
+                }
+                let C = e.innerHTML;
+                b(e, t || '<i class="fa-solid fa-check"></i>'), m(() => {
+                    e.disabled = !1, e.innerHTML = C
+                }, s)
+            },
+            notify: g,
+            timeOut: m,
+            debounce: (e, t = 100) => {
+                let s = null;
+                return (...h) => {
+                    clearTimeout(s), s = setTimeout(() => e(...h), t)
+                }
+            },
+            escapeHtml: p,
+            base64Encode: e => {
+                let s = new TextEncoder().encode(e);
+                return window.btoa(String.fromCharCode(...s))
+            },
+            base64Decode: e => {
+                let t = new TextDecoder,
+                    s = Uint8Array.from(window.atob(e), h => h.charCodeAt(0));
+                return t.decode(s)
+            },
+            disableButton: (e, t = "Loading", s = !1) => {
+                e.disabled = !0;
+                let h = e.innerHTML;
+                return b(e, s ? t : o + t), {
+                    restore: (C = !1) => {
+                        e.innerHTML = h, e.disabled = C
+                    }
+                }
+            },
+            disableCheckbox: e => {
+                e.disabled = !0;
+                let t = document.querySelector(`label[for="${e.id}"]`),
+                    s = t.innerHTML;
+                return b(t, o + s), {
+                    restore: () => {
+                        t.innerHTML = s, e.disabled = !1
+                    }
+                }
+            },
+            safeInnerHTML: b,
+            parseUserAgent: e => {
+                if (!e || typeof e != "string") return "Unknown";
+                let t = f.find(A => A.regex.test(e))?.type ?? "Unknown",
+                    s = u.find(A => A.regex.test(e))?.name ?? "Unknown",
+                    h = w.find(A => A.regex.test(e)),
+                    C = h ? h.name : "Unknown",
+                    I = h ? e.match(h.regex)?.[1]?.replace(/_/g, ".") ?? null : null;
+                return `${s} ${t} ${I?`${C} ${I}`:C}`
+            },
+            changeOpacity: E,
+            getGMTOffset: e => {
+                let t = new Date,
+                    s = new Intl.DateTimeFormat("en-US", {
+                        timeZone: e,
+                        hourCycle: "h23",
+                        hour: "numeric"
+                    }),
+                    h = (parseInt(s.format(t)) - t.getUTCHours() + 24) % 24;
+                return h > 12 && (h -= 24), `GMT${h>=0?"+":""}${h}`
+            },
+            convertMarkdownToHTML: e => (d.forEach(([t, s]) => {
+                e = e.replace(new RegExp(`\\${t}(\\S(?:[\\s\\S]*?\\S)?)\\${t}`, "g"), s)
+            }), e)
+        }
+    })();
+    var X = {
+        tab: f => window.bootstrap.Tab.getOrCreateInstance(document.getElementById(f)),
+        modal: f => window.bootstrap.Modal.getOrCreateInstance(document.getElementById(f))
+    };
+    var q = (() => {
+        let o = ({
+                uuid: m,
+                own: T,
+                name: H,
+                presence: $,
+                comment: n,
+                created_at: l,
+                is_admin: y,
+                is_parent: k,
+                gif_url: v,
+                ip: r,
+                user_agent: e,
+                comments: t,
+                like_count: s
+            }) => ({
+                uuid: m,
+                own: T,
+                name: H,
+                presence: $,
+                comment: n,
+                created_at: l,
+                is_admin: y ?? !1,
+                is_parent: k,
+                gif_url: v,
+                ip: r,
+                user_agent: e,
+                comments: t?.map(o) ?? [],
+                like_count: s ?? 0
+            }),
+            d = m => m.map(o);
+        return {
+            uuidResponse: ({
+                uuid: m
+            }) => ({
+                uuid: m
+            }),
+            tokenResponse: ({
+                token: m
+            }) => ({
+                token: m
+            }),
+            statusResponse: ({
+                status: m
+            }) => ({
+                status: m
+            }),
+            getCommentResponse: o,
+            getCommentsResponse: d,
+            getCommentsResponseV2: m => ({
+                count: m.count,
+                lists: d(m.lists)
+            }),
+            commentShowMore: (m, T = !1) => ({
+                uuid: m,
+                show: T
+            }),
+            postCommentRequest: (m, T, H, $, n) => ({
+                id: m,
+                name: T,
+                presence: H,
+                comment: $,
+                gif_id: n
+            }),
+            postSessionRequest: (m, T) => ({
+                email: m,
+                password: T
+            }),
+            updateCommentRequest: (m, T, H) => ({
+                presence: m,
+                comment: T,
+                gif_id: H
+            })
+        }
+    })();
+    var R = o => {
+        let d = (g = null) => {
+                let L = JSON.parse(localStorage.getItem(o));
+                return g ? L[String(g)] : L
+            },
+            f = (g, L) => {
+                let b = d();
+                b[String(g)] = L, localStorage.setItem(o, JSON.stringify(b))
+            },
+            u = g => Object.keys(d()).includes(String(g)),
+            w = g => {
+                if (!u(g)) return;
+                let L = d();
+                delete L[String(g)], localStorage.setItem(o, JSON.stringify(L))
+            },
+            p = () => localStorage.setItem(o, "{}");
+        return localStorage.getItem(o) || p(), {
+            set: f,
+            get: d,
+            has: u,
+            clear: p,
+            unset: w
+        }
+    };
+    var z = "GET",
+        se = "PUT",
+        Y = "POST",
+        W = "PATCH",
+        de = "DELETE";
+    var ne = "AbortError",
+        Te = "TypeError",
+        oe = {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+        },
+        ue = "request",
+        me = (() => {
+            let o = null;
+            return {
+                getInstance: () => (o || (o = window.caches.open(ue)), o),
+                purge: () => {
+                    o = null
+                }
+            }
+        })(),
+        fe = async () => {
+            window.isSecureContext && (me.purge(), await window.caches.delete(ue))
+        }, Q = o => ({
+            set: (w, p, g, L) => p.clone().arrayBuffer().then(b => {
+                if (!p.ok || !window.isSecureContext) return p;
+                let E = new Date,
+                    m = new Headers(p.headers);
+                if (m.has("Date") || m.set("Date", E.toUTCString()), g || !m.has("Cache-Control")) {
+                    if (!g && m.has("Expires")) {
+                        let T = new Date(m.get("Expires"));
+                        L = Math.max(0, T.getTime() - E.getTime())
+                    }
+                    m.set("Cache-Control", `public, max-age=${Math.floor(L/1e3)}`)
+                }
+                return m.has("Content-Length") || m.set("Content-Length", String(b.byteLength)), o.put(w, new Response(b, {
+                    headers: m
+                })).then(() => p)
+            }),
+            has: w => o.match(w).then(p => {
+                if (!p) return null;
+                let g = p.headers.get("Cache-Control").match(/max-age=(\d+)/)[1],
+                    L = Date.parse(p.headers.get("Date")) + parseInt(g) * 1e3;
+                return Date.now() > L ? null : p
+            }),
+            del: w => o.delete(w)
+        }), P = (o, d) => {
+            let f = new AbortController,
+                u = {
+                    signal: f.signal,
+                    credential: "include",
+                    headers: new Headers(oe),
+                    method: String(o).toUpperCase()
+                };
+            window.addEventListener("offline", () => f.abort(), {
+                once: !0
+            }), window.addEventListener("popstate", () => f.abort(), {
+                once: !0
+            });
+            let w = 0,
+                p = 0,
+                g = 0,
+                L = 0,
+                b = !1,
+                E = null,
+                m = null,
+                T = null,
+                H = n => {
+                    let l = () => {
+                        let k = () => window.fetch(n, u).then(async v => {
+                            if (!v.ok || !T) return v;
+                            let r = parseInt(v.headers.get("Content-Length") ?? 0);
+                            if (r === 0) return v;
+                            let e = [],
+                                t = 0,
+                                s = v.body.getReader();
+                            for (;;) {
+                                let {
+                                    done: C,
+                                    value: I
+                                } = await s.read();
+                                if (C) break;
+                                e.push(I), t += I.length, await T(t, r, window.structuredClone ? window.structuredClone(e) : e)
+                            }
+                            let h = v.headers.get("Content-Type") ?? "application/octet-stream";
+                            return new Response(new Blob(e, {
+                                type: h
+                            }), {
+                                status: v.status,
+                                statusText: v.statusText,
+                                headers: new Headers(v.headers)
+                            })
+                        });
+                        return w === 0 || !window.isSecureContext ? k() : u.method !== z ? (console.warn("Only method GET can be cached"), k()) : me.getInstance().then(Q).then(v => v.has(n).then(r => r ? Promise.resolve(r) : v.del(n).then(k).then(e => v.set(n, e, b, w))))
+                    };
+                    if (p === 0 && g === 0) return l();
+                    let y = async () => {
+                        try {
+                            return await l()
+                        } catch (k) {
+                            if (k.name === ne) throw k;
+                            if (g *= 2, L++, L > p) throw new Error(`Max retries reached: ${k}`);
+                            return console.warn(`Retrying fetch (${L}/${p}): ${n.toString()}`), await new Promise(v => window.setTimeout(v, g)), y()
+                        }
+                    };
+                    return y()
+                },
+                $ = n => {
+                    if (n.status !== 200) return n;
+                    let l = document.querySelector("a[download]");
+                    l && document.body.removeChild(l);
+                    let y = n.headers.get("Content-Disposition")?.match(/filename="(.+)"/)?.[1];
+                    return n.clone().blob().then(k => {
+                        let v = document.createElement("a"),
+                            r = window.URL.createObjectURL(k);
+                        return v.href = r, v.download = y || `${m}.${E||(k.type.split("/")?.[1]??"bin")}`, document.body.appendChild(v), v.click(), document.body.removeChild(v), window.URL.revokeObjectURL(r), n
+                    })
+                };
+            return {
+                send(n = null) {
+                    return m && Object.keys(oe).forEach(l => u.headers.delete(l)), H(new URL(d, document.body.getAttribute("data-url"))).then(l => m && l.ok ? {
+                        code: l.status,
+                        data: $(l),
+                        error: null
+                    } : l.json().then(y => {
+                        if (y.error) {
+                            let k = y.error.at(0),
+                                v = l.status >= 500;
+                            throw new Error(v ? `ID: ${y.id}
+\u{1F7E5} ${k}` : `\u{1F7E8} ${k}`)
+                        }
+                        return n && (y.data = n(y.data)), Object.assign(y, {
+                            code: l.status
+                        })
+                    })).catch(l => {
+                        if (l.name === ne) return console.warn("Fetch aborted:", l), l;
+                        throw l.name === Te && (l = new Error("\u{1F7E5} Network error or rate limit exceeded")), alert(l.message || String(l)), l
+                    })
+                },
+                withCache(n = 1e3 * 60 * 60 * 6) {
+                    return w = n, this
+                },
+                withForceCache() {
+                    return b = !0, this
+                },
+                withRetry(n = 3, l = 1e3) {
+                    return p = n, g = l, this
+                },
+                withCancel(n) {
+                    return n == null ? this : ((async () => (await n, f.abort()))(), this)
+                },
+                withDownload(n, l = null) {
+                    return m = n, E = l, this
+                },
+                withProgressFunc(n = null) {
+                    return T = n, this
+                },
+                default (n = null) {
+                    return u.headers = new Headers(n ?? {}), H(d).then(l => m ? $(l) : l)
+                },
+                token(n) {
+                    return n.split(".").length === 3 ? (u.headers.append("Authorization", "Bearer " + n), this) : (u.headers.append("x-access-key", n), this)
+                },
+                body(n) {
+                    if (u.method === z) throw new Error("GET method does not support body");
+                    return u.body = JSON.stringify(n), this
+                }
+            }
+        };
+    var S = (() => {
+        let o = null,
+            d = () => o.get("token"),
+            f = E => o.set("token", E),
+            u = E => P(Y, "/api/session").body(E).send(q.tokenResponse).then(m => (m.code === 200 && f(m.data.token), m.code === 200)),
+            w = () => o.unset("token"),
+            p = () => String(d() ?? ".").split(".").length === 3;
+        return {
+            init: () => {
+                o = R("session")
+            },
+            guest: E => P(z, "/api/v2/config").withCache(1e3 * 60 * 30).withForceCache().token(E).send().then(m => {
+                if (m.code !== 200) throw new Error("failed to get config.");
+                let T = R("config");
+                for (let [H, $] of Object.entries(m.data)) T.set(H, $);
+                return f(E), m
+            }),
+            login: u,
+            logout: w,
+            decode: () => {
+                if (!p()) return null;
+                try {
+                    return JSON.parse(a.base64Decode(d().split(".")[1]))
+                } catch {
+                    return null
+                }
+            },
+            isAdmin: p,
+            setToken: f,
+            getToken: d
+        }
+    })();
+    var Z = (() => {
+        let o = null,
+            d = g => {
+                let L = a.disableButton(g),
+                    b = document.getElementById("loginEmail"),
+                    E = document.getElementById("loginPassword");
+                b.disabled = !0, E.disabled = !0, S.login(q.postSessionRequest(b.value, E.value)).then(m => {
+                    m && (b.value = null, E.value = null, X.modal("mainModal").hide())
+                }).finally(() => {
+                    L.restore(), b.disabled = !1, E.disabled = !1
+                })
+            },
+            f = async () => {
+                await fe(), o.clear(), S.logout(), X.modal("mainModal").show()
+            };
+        return {
+            init: () => {
+                o = R("user")
+            },
+            login: d,
+            clearSession: f,
+            getDetailUser: () => P(z, "/api/user").token(S.getToken()).send().then(g => {
+                if (g.code !== 200) throw new Error("failed to get user.");
+                return Object.entries(g.data).forEach(([L, b]) => o.set(L, b)), g
+            }).catch(g => (f(), g)),
+            getUserStorage: () => o
+        }
+    })();
+    var ge = (() => {
+        let o = (u, w) => {
+            document.querySelectorAll(".navbar button").forEach(p => {
+                p.classList.contains("active") && p.classList.remove("active")
+            }), X.tab(w).show(), u.classList.add("active")
+        };
+        return {
+            buttonNavHome: u => {
+                o(u, "button-home")
+            },
+            buttonNavSetting: u => {
+                o(u, "button-setting")
+            }
+        }
+    })();
+    var ae = (() => {
+        let o = {
+                "#000000": "#ffffff",
+                "#ffffff": "#000000",
+                "#212529": "#f8f9fa",
+                "#f8f9fa": "#212529"
+            },
+            d = ["#ffffff", "#f8f9fa"],
+            f = ["#000000", "#212529"],
+            u = !1,
+            w = null,
+            p = null,
+            g = () => w.set("active", "light"),
+            L = () => w.set("active", "dark"),
+            b = y => {
+                let k = p.getAttribute("content");
+                p.setAttribute("content", y.some(v => v === k) ? o[k] : k)
+            },
+            E = () => {
+                g(), document.documentElement.setAttribute("data-bs-theme", "light"), b(f)
+            },
+            m = () => {
+                L(), document.documentElement.setAttribute("data-bs-theme", "dark"), b(d)
+            },
+            T = (y = null, k = null) => {
+                let v = w.get("active") === "dark";
+                return y && k ? v ? y : k : v
+            };
+        return {
+            init: () => {
+                switch (w = R("theme"), p = document.querySelector('meta[name="theme-color"]'), w.has("active") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? L() : g()), document.documentElement.getAttribute("data-bs-theme")) {
+                    case "dark":
+                        L();
+                        break;
+                    case "light":
+                        g();
+                        break;
+                    default:
+                        u = !0
+                }
+                T() ? m() : E()
+            },
+            spyTop: () => {
+                let y = v => v.filter(r => r.isIntersecting).forEach(r => {
+                        let e = r.target.classList.contains("bg-white-black") ? T(f[0], d[0]) : T(f[1], d[1]);
+                        p.setAttribute("content", e)
+                    }),
+                    k = new IntersectionObserver(y, {
+                        rootMargin: "0% 0% -95% 0%"
+                    });
+                document.querySelectorAll("section").forEach(v => k.observe(v))
+            },
+            change: () => T() ? E() : m(),
+            isDarkMode: T,
+            isAutoMode: () => u
+        }
+    })();
+    var V = (() => {
+        let o = {
+                id: "ID",
+                en: "US",
+                fr: "FR",
+                de: "DE",
+                es: "ES",
+                zh: "CN",
+                ja: "JP",
+                ko: "KR",
+                ar: "SA",
+                ru: "RU",
+                it: "IT",
+                nl: "NL",
+                pt: "PT",
+                tr: "TR",
+                th: "TH",
+                vi: "VN",
+                ms: "MY",
+                hi: "IN"
+            },
+            d = null,
+            f = null,
+            u = null,
+            w = null;
+        return {
+            on(p, g) {
+                return w.set(p, g), this
+            },
+            get() {
+                let p = w.get(u);
+                return w.clear(), p
+            },
+            getCountry() {
+                return d
+            },
+            getLocale() {
+                return f
+            },
+            getLanguage() {
+                return u
+            },
+            setDefault(p) {
+                let g = !0;
+                o[p] || (g = !1, console.warn("Language not found, please add manually in countryMapping")), d = g ? o[p] : "US", u = g ? p : "en", f = `${u}_${d}`
+            },
+            init() {
+                w = new Map, this.setDefault(navigator.language.split("-").shift())
+            }
+        }
+    })();
+    var pe = (() => {
+        let o = null,
+            d = !0,
+            f = ["input[data-offline-disabled]", "button[data-offline-disabled]", "select[data-offline-disabled]", "textarea[data-offline-disabled]"],
+            u = () => d,
+            w = () => {
+                let T = o.firstElementChild.firstElementChild;
+                T.classList.remove("bg-success"), T.classList.add("bg-danger"), T.firstElementChild.innerHTML = '<i class="fa-solid fa-ban me-2"></i>Koneksi tidak tersedia'
+            },
+            p = () => {
+                let T = o.firstElementChild.firstElementChild;
+                T.classList.remove("bg-danger"), T.classList.add("bg-success"), T.firstElementChild.innerHTML = '<i class="fa-solid fa-cloud me-2"></i>Koneksi tersedia kembali'
+            },
+            g = async () => {
+                d && (await a.changeOpacity(o, !1), w())
+            }, L = () => {
+                document.querySelectorAll(f.join(", ")).forEach(T => {
+                    T.dispatchEvent(new Event(u() ? "online" : "offline")), T.setAttribute("data-offline-disabled", u() ? "false" : "true"), T.tagName === "BUTTON" ? u() ? T.classList.remove("disabled") : T.classList.add("disabled") : u() ? T.removeAttribute("disabled") : T.setAttribute("disabled", "true")
+                })
+            }, b = () => {
+                d = !1, w(), a.changeOpacity(o, !0), L()
+            }, E = () => {
+                d = !0, p(), a.timeOut(g, 3e3), L()
+            };
+        return {
+            init: () => {
+                window.addEventListener("online", E), window.addEventListener("offline", b), o = document.createElement("div"), o.classList.add("fixed-top", "pe-none"), o.style.cssText = "opacity: 0; z-index: 1057;", o.innerHTML = `
         <div class="d-flex justify-content-center mx-auto">
             <div class="d-flex justify-content-center align-items-center rounded-pill my-2 bg-danger shadow">
                 <small class="text-center py-1 px-2 mx-1 mt-1 mb-0 text-white" style="font-size: 0.8rem;"></small>
             </div>
-        </div>`,document.body.insertBefore(o,document.body.lastChild)},isOnline:u}})();var ve=(()=>{let o=null;return{getInstance:d=>(o||(o=new Map),o.has(d)||o.set(d,window.caches.open(d)),o.get(d))}})(),he=o=>{let d=new Map,f=new Map,u=null,w=1e3*60*60*6,p=!1,g=async()=>(!u&&window.isSecureContext&&(u=await ve.getInstance(o)),u),L=($,n)=>g().then(Q).then(l=>{if(!n.ok)throw new Error(n.statusText);return l.set($,n,p,w)}),b=$=>g().then(Q).then(n=>n.has($)),E=$=>g().then(Q).then(n=>n.del($)),m=($,n=null)=>{if(d.has($))return Promise.resolve(d.get($));if(f.has($))return f.get($);let l=()=>P(z,$).withCancel(n).withRetry().default(),y=g().then(()=>window.isSecureContext?b($).then(k=>k?Promise.resolve(k):E($).then(l).then(v=>L($,v))):l()).then(k=>k.blob()).then(k=>d.set($,URL.createObjectURL(k))).then(()=>d.get($)).finally(()=>f.delete($));return f.set($,y),y};return{run:($,n=null)=>g().then(()=>{let l=new Map;return window.isSecureContext||console.warn("Cache is not supported in insecure context"),$.filter(y=>y!==null).forEach(y=>{let k=l.get(y.url)??[];l.set(y.url,[...k,[y.res,y?.rej]])}),Promise.allSettled(Array.from(l).map(([y,k])=>m(y,n).then(v=>(k.forEach(r=>r[0]?.(v)),v)).catch(v=>(k.forEach(r=>r[1]?.(v)),v))))}),del:E,has:b,set:L,get:m,open:g,download:async($,n)=>{if(!new Map(Array.from(d.entries()).map(([y,k])=>[k,y])).has($))try{if(!new URL($).protocol.includes("blob"))throw new Error("Is not blob")}catch{$=await m($)}return P(z,$).withDownload(n).default()},setTtl($){return w=Number($),this},withForceCache(){return p=!0,this}}};var _=(()=>{let o="default",d={128:2,256:3,512:4,768:5},f=null,u=null,w=null,p=null,g=(c,i,x=null)=>{let B=u.get(c);return i.map(N=>{let{id:U,media_formats:{tinygif:{url:F}},content_description:M}=N;B.pointer===-1||B.pointer===B.col-1?B.pointer=0:B.pointer++;let te=B.lists.childNodes[B.pointer]??null;return te?{url:F,res:le=>{te.insertAdjacentHTML("beforeend",`
+        </div>`, document.body.insertBefore(o, document.body.lastChild)
+            },
+            isOnline: u
+        }
+    })();
+    var ve = (() => {
+            let o = null;
+            return {
+                getInstance: d => (o || (o = new Map), o.has(d) || o.set(d, window.caches.open(d)), o.get(d))
+            }
+        })(),
+        he = o => {
+            let d = new Map,
+                f = new Map,
+                u = null,
+                w = 1e3 * 60 * 60 * 6,
+                p = !1,
+                g = async () => (!u && window.isSecureContext && (u = await ve.getInstance(o)), u), L = ($, n) => g().then(Q).then(l => {
+                    if (!n.ok) throw new Error(n.statusText);
+                    return l.set($, n, p, w)
+                }), b = $ => g().then(Q).then(n => n.has($)), E = $ => g().then(Q).then(n => n.del($)), m = ($, n = null) => {
+                    if (d.has($)) return Promise.resolve(d.get($));
+                    if (f.has($)) return f.get($);
+                    let l = () => P(z, $).withCancel(n).withRetry().default(),
+                        y = g().then(() => window.isSecureContext ? b($).then(k => k ? Promise.resolve(k) : E($).then(l).then(v => L($, v))) : l()).then(k => k.blob()).then(k => d.set($, URL.createObjectURL(k))).then(() => d.get($)).finally(() => f.delete($));
+                    return f.set($, y), y
+                };
+            return {
+                run: ($, n = null) => g().then(() => {
+                    let l = new Map;
+                    return window.isSecureContext || console.warn("Cache is not supported in insecure context"), $.filter(y => y !== null).forEach(y => {
+                        let k = l.get(y.url) ?? [];
+                        l.set(y.url, [...k, [y.res, y?.rej]])
+                    }), Promise.allSettled(Array.from(l).map(([y, k]) => m(y, n).then(v => (k.forEach(r => r[0]?.(v)), v)).catch(v => (k.forEach(r => r[1]?.(v)), v))))
+                }),
+                del: E,
+                has: b,
+                set: L,
+                get: m,
+                open: g,
+                download: async ($, n) => {
+                    if (!new Map(Array.from(d.entries()).map(([y, k]) => [k, y])).has($)) try {
+                        if (!new URL($).protocol.includes("blob")) throw new Error("Is not blob")
+                    } catch {
+                        $ = await m($)
+                    }
+                    return P(z, $).withDownload(n).default()
+                },
+                setTtl($) {
+                    return w = Number($), this
+                },
+                withForceCache() {
+                    return p = !0, this
+                }
+            }
+        };
+    var _ = (() => {
+        let o = "default",
+            d = {
+                128: 2,
+                256: 3,
+                512: 4,
+                768: 5
+            },
+            f = null,
+            u = null,
+            w = null,
+            p = null,
+            g = (c, i, x = null) => {
+                let B = u.get(c);
+                return i.map(N => {
+                    let {
+                        id: U,
+                        media_formats: {
+                            tinygif: {
+                                url: F
+                            }
+                        },
+                        content_description: M
+                    } = N;
+                    B.pointer === -1 || B.pointer === B.col - 1 ? B.pointer = 0 : B.pointer++;
+                    let te = B.lists.childNodes[B.pointer] ?? null;
+                    return te ? {
+                        url: F,
+                        res: le => {
+                            te.insertAdjacentHTML("beforeend", `
                 <figure class="hover-wrapper m-0 position-relative">
                     <button onclick="undangan.comment.gif.click(this, '${B.uuid}', '${U}', '${a.base64Encode(F)}')" class="btn hover-area position-absolute justify-content-center align-items-center top-0 end-0 bg-overlay-auto p-1 m-1 rounded-circle border shadow-sm z-1">
                         <i class="fa-solid fa-circle-check"></i>
                     </button>
                     <img src="${le}" class="img-fluid" alt="${a.escapeHtml(M)}" style="width: 100%;">
-                </figure>`),x?.step()}}:null})},L=()=>f.open(),b=c=>f.get(c),E=c=>{let i=u.get(c),x=i.lists,B=document.getElementById(`gif-loading-${i.uuid}`),N=document.getElementById(`progress-bar-${i.uuid}`),U=document.getElementById(`progress-info-${i.uuid}`),F=0,M=0;x.setAttribute("data-continue","false"),x.classList.replace("overflow-y-scroll","overflow-y-hidden");let te=150,ie=!1,le=setTimeout(()=>{ie||(U.innerText=`${M}/${F}`,x.classList.contains("d-none")||B.classList.replace("d-none","d-flex"))},te);return{release:()=>{ie=!0,clearTimeout(le),x.classList.contains("d-none")||B.classList.replace("d-flex","d-none"),N.style.width="0%",U.innerText=`${M}/${F}`,x.setAttribute("data-continue","true"),x.classList.replace("overflow-y-hidden","overflow-y-scroll")},until:we=>{F=we,U.innerText=`${M}/${F}`},step:()=>{M+=1,U.innerText=`${M}/${F}`,N.style.width=Math.min(M/F*100,100).toString()+"%"}}},m=(c,i,x)=>{x={media_filter:"tinygif",client_key:"undangan_app",key:p.get("tenor_key"),country:V.getCountry(),locale:V.getLocale(),...x??{}};let B=Object.keys(x).filter(M=>x[M]!==null&&x[M]!==void 0).map(M=>`${M}=${encodeURIComponent(x[M])}`).join("&"),N=E(c),U=u.get(c),F=new Promise(M=>{U.reqs.push(M)});U.last=P(z,`https://tenor.googleapis.com/v2${i}?${B}`).withCache().withRetry().withCancel(F).default(oe).then(M=>M.json()).then(M=>{if(M.error)throw new Error(M.error.message);return M.results.length===0?M:(U.next=M?.next,N.until(M.results.length),U.gifs.push(...M.results),f.run(g(c,M.results,N),F))}).catch(M=>{M.name===ne?console.warn("Fetch abort:",M):a.notify(M).error()}).finally(()=>N.release())},T=c=>(c=a.escapeHtml(c),`
+                </figure>`), x?.step()
+                        }
+                    } : null
+                })
+            },
+            L = () => f.open(),
+            b = c => f.get(c),
+            E = c => {
+                let i = u.get(c),
+                    x = i.lists,
+                    B = document.getElementById(`gif-loading-${i.uuid}`),
+                    N = document.getElementById(`progress-bar-${i.uuid}`),
+                    U = document.getElementById(`progress-info-${i.uuid}`),
+                    F = 0,
+                    M = 0;
+                x.setAttribute("data-continue", "false"), x.classList.replace("overflow-y-scroll", "overflow-y-hidden");
+                let te = 150,
+                    ie = !1,
+                    le = setTimeout(() => {
+                        ie || (U.innerText = `${M}/${F}`, x.classList.contains("d-none") || B.classList.replace("d-none", "d-flex"))
+                    }, te);
+                return {
+                    release: () => {
+                        ie = !0, clearTimeout(le), x.classList.contains("d-none") || B.classList.replace("d-flex", "d-none"), N.style.width = "0%", U.innerText = `${M}/${F}`, x.setAttribute("data-continue", "true"), x.classList.replace("overflow-y-hidden", "overflow-y-scroll")
+                    },
+                    until: we => {
+                        F = we, U.innerText = `${M}/${F}`
+                    },
+                    step: () => {
+                        M += 1, U.innerText = `${M}/${F}`, N.style.width = Math.min(M / F * 100, 100).toString() + "%"
+                    }
+                }
+            },
+            m = (c, i, x) => {
+                x = {
+                    media_filter: "tinygif",
+                    client_key: "undangan_app",
+                    key: p.get("tenor_key"),
+                    country: V.getCountry(),
+                    locale: V.getLocale(),
+                    ...x ?? {}
+                };
+                let B = Object.keys(x).filter(M => x[M] !== null && x[M] !== void 0).map(M => `${M}=${encodeURIComponent(x[M])}`).join("&"),
+                    N = E(c),
+                    U = u.get(c),
+                    F = new Promise(M => {
+                        U.reqs.push(M)
+                    });
+                U.last = P(z, `https://tenor.googleapis.com/v2${i}?${B}`).withCache().withRetry().withCancel(F).default(oe).then(M => M.json()).then(M => {
+                    if (M.error) throw new Error(M.error.message);
+                    return M.results.length === 0 ? M : (U.next = M?.next, N.until(M.results.length), U.gifs.push(...M.results), f.run(g(c, M.results, N), F))
+                }).catch(M => {
+                    M.name === ne ? console.warn("Fetch abort:", M) : a.notify(M).error()
+                }).finally(() => N.release())
+            },
+            T = c => (c = a.escapeHtml(c), `
         <label for="gif-search-${c}" class="form-label my-1"><i class="fa-solid fa-photo-film me-2"></i>Gif</label>
 
         <div class="d-flex mb-3" id="gif-search-nav-${c}">
@@ -32,7 +828,117 @@
             <button onclick="undangan.comment.gif.cancel('${c}')" id="gif-cancel-${c}" class="btn d-none position-absolute justify-content-center align-items-center top-0 end-0 bg-overlay-auto p-2 m-0 rounded-circle border shadow-sm z-1">
                 <i class="fa-solid fa-circle-xmark"></i>
             </button>
-        </figure>`),H=async c=>{let i=u.get(c);i.reqs.forEach(x=>x()),i.reqs.length=0,i.last&&(await i.last,i.last=null)},$=async c=>{await H(c);let i=u.get(c),x=i.col??0,B=0;for(let[N,U]of Object.entries(d))B=U,i.lists.clientWidth>=parseInt(N)&&(i.col=B);if(i.col===null&&(i.col=B),x!==i.col&&(i.pointer=-1,i.limit=i.col*5,i.lists.innerHTML='<div class="d-flex flex-column"></div>'.repeat(i.col),i.gifs.length!==0)){try{await f.run(g(c,i.gifs))}catch{i.gifs.length=0}x!==i.col&&i.lists.scroll({top:i.lists.scrollHeight,behavior:"instant"}),i.gifs.length===0&&await $(c)}},n=async c=>{let i=u.get(c);if(i.lists.getAttribute("data-continue")!=="true"||!i.next||i.next.length===0)return;let x=i.query&&i.query.trim().length>0,B={pos:i.next,limit:i.limit};x&&(B.q=i.query),i.lists.scrollTop>(i.lists.scrollHeight-i.lists.clientHeight)*.8&&(await $(c),m(c,x?"/search":"/featured",B))},l=async(c,i=null)=>{let x=u.get(c);x.query=i!==null?i:x.query,(!x.query||x.query.trim().length===0)&&(x.query=null),x.col=null,x.next=null,x.pointer=-1,x.gifs.length=0,await $(c),m(c,x.query===null?"/featured":"/search",{q:x.query,limit:x.limit})},y=async(c,i,x,B)=>{let N=a.disableButton(c,a.loader.replace("me-1","me-0"),!0),U=document.getElementById(`gif-result-${i}`);U.setAttribute("data-id",x),U.querySelector(`#gif-cancel-${i}`).classList.replace("d-none","d-flex"),U.insertAdjacentHTML("beforeend",`<img src="${await b(a.base64Decode(B))}" class="img-fluid mx-auto gif-image rounded-4" alt="selected-gif">`),N.restore(),u.get(i).lists.classList.replace("d-flex","d-none"),document.getElementById(`gif-search-nav-${i}`).classList.replace("d-flex","d-none")},k=c=>{let i=document.getElementById(`gif-result-${c}`);i.removeAttribute("data-id"),i.querySelector(`#gif-cancel-${c}`).classList.replace("d-flex","d-none"),i.querySelector("img").remove(),u.get(c).lists.classList.replace("d-none","d-flex"),document.getElementById(`gif-search-nav-${c}`).classList.replace("d-none","d-flex")},v=async(c=null)=>{c?u.has(c)&&(await H(c),w.delete(c),u.delete(c)):(await Promise.allSettled(Array.from(u.keys()).map(i=>H(i))),w.clear(),u.clear())},r=async(c,i)=>{let x=a.disableButton(c,a.loader.replace("me-1","me-0"),!0);await H(i),x.restore(),document.getElementById(`gif-form-${i}`).classList.toggle("d-none",!0),document.getElementById(`comment-form-${i}`)?.classList.toggle("d-none",!1)},e=c=>{if(!u.has(c)){a.safeInnerHTML(document.getElementById(`gif-form-${c}`),T(c));let i=document.getElementById(`gif-lists-${c}`);u.set(c,{uuid:c,lists:i,last:null,limit:null,query:null,next:null,col:null,pointer:-1,gifs:[],reqs:[]});let x=a.debounce(n,150);i.addEventListener("scroll",()=>x(c));let B=a.debounce(l,850);document.getElementById(`gif-search-${c}`).addEventListener("input",N=>B(c,N.target.value))}return document.getElementById(`gif-form-${c}`).classList.toggle("d-none",!1),document.getElementById(`comment-form-${c}`)?.classList.toggle("d-none",!0),w.has(c)&&w.get(c)(),l(c)},t=c=>{let i=document.getElementById(`gif-form-${c}`);return i&&!i.classList.contains("d-none")},s=c=>document.getElementById(`gif-result-${c}`)?.getAttribute("data-id"),h=c=>document.querySelector(`[for="gif-search-${c}"]`)?.remove(),C=c=>document.querySelector(`[onclick="undangan.comment.gif.back(this, '${c}')"]`)?.remove(),I=(c,i)=>w.set(c,i),A=(c=null)=>{let i=document.getElementById(`gif-cancel-${c||o}`);return{show:()=>i.classList.replace("d-none","d-flex"),hide:()=>i.classList.replace("d-flex","d-none"),click:()=>i.dispatchEvent(new Event("click"))}},O=()=>!!p.get("tenor_key"),D=()=>{document.querySelector('[onclick="undangan.comment.gif.open(undangan.comment.gif.default)"]')?.classList.toggle("d-none",!p.get("tenor_key"))};return{default:o,init:()=>{f=he("gif"),u=new Map,w=new Map,p=R("config"),document.addEventListener("undangan.session",D)},get:b,back:r,open:e,cancel:k,click:y,remove:v,isOpen:t,onOpen:I,isActive:O,getResultId:s,buttonCancel:A,removeGifSearch:h,removeButtonBack:C,prepareCache:L}})();var j=(()=>{let o=null,d=null,f=null,u=null,w=300,p=()=>`
+        </figure>`),
+            H = async c => {
+                let i = u.get(c);
+                i.reqs.forEach(x => x()), i.reqs.length = 0, i.last && (await i.last, i.last = null)
+            }, $ = async c => {
+                await H(c);
+                let i = u.get(c),
+                    x = i.col ?? 0,
+                    B = 0;
+                for (let [N, U] of Object.entries(d)) B = U, i.lists.clientWidth >= parseInt(N) && (i.col = B);
+                if (i.col === null && (i.col = B), x !== i.col && (i.pointer = -1, i.limit = i.col * 5, i.lists.innerHTML = '<div class="d-flex flex-column"></div>'.repeat(i.col), i.gifs.length !== 0)) {
+                    try {
+                        await f.run(g(c, i.gifs))
+                    } catch {
+                        i.gifs.length = 0
+                    }
+                    x !== i.col && i.lists.scroll({
+                        top: i.lists.scrollHeight,
+                        behavior: "instant"
+                    }), i.gifs.length === 0 && await $(c)
+                }
+            }, n = async c => {
+                let i = u.get(c);
+                if (i.lists.getAttribute("data-continue") !== "true" || !i.next || i.next.length === 0) return;
+                let x = i.query && i.query.trim().length > 0,
+                    B = {
+                        pos: i.next,
+                        limit: i.limit
+                    };
+                x && (B.q = i.query), i.lists.scrollTop > (i.lists.scrollHeight - i.lists.clientHeight) * .8 && (await $(c), m(c, x ? "/search" : "/featured", B))
+            }, l = async (c, i = null) => {
+                let x = u.get(c);
+                x.query = i !== null ? i : x.query, (!x.query || x.query.trim().length === 0) && (x.query = null), x.col = null, x.next = null, x.pointer = -1, x.gifs.length = 0, await $(c), m(c, x.query === null ? "/featured" : "/search", {
+                    q: x.query,
+                    limit: x.limit
+                })
+            }, y = async (c, i, x, B) => {
+                let N = a.disableButton(c, a.loader.replace("me-1", "me-0"), !0),
+                    U = document.getElementById(`gif-result-${i}`);
+                U.setAttribute("data-id", x), U.querySelector(`#gif-cancel-${i}`).classList.replace("d-none", "d-flex"), U.insertAdjacentHTML("beforeend", `<img src="${await b(a.base64Decode(B))}" class="img-fluid mx-auto gif-image rounded-4" alt="selected-gif">`), N.restore(), u.get(i).lists.classList.replace("d-flex", "d-none"), document.getElementById(`gif-search-nav-${i}`).classList.replace("d-flex", "d-none")
+            }, k = c => {
+                let i = document.getElementById(`gif-result-${c}`);
+                i.removeAttribute("data-id"), i.querySelector(`#gif-cancel-${c}`).classList.replace("d-flex", "d-none"), i.querySelector("img").remove(), u.get(c).lists.classList.replace("d-none", "d-flex"), document.getElementById(`gif-search-nav-${c}`).classList.replace("d-none", "d-flex")
+            }, v = async (c = null) => {
+                c ? u.has(c) && (await H(c), w.delete(c), u.delete(c)) : (await Promise.allSettled(Array.from(u.keys()).map(i => H(i))), w.clear(), u.clear())
+            }, r = async (c, i) => {
+                let x = a.disableButton(c, a.loader.replace("me-1", "me-0"), !0);
+                await H(i), x.restore(), document.getElementById(`gif-form-${i}`).classList.toggle("d-none", !0), document.getElementById(`comment-form-${i}`)?.classList.toggle("d-none", !1)
+            }, e = c => {
+                if (!u.has(c)) {
+                    a.safeInnerHTML(document.getElementById(`gif-form-${c}`), T(c));
+                    let i = document.getElementById(`gif-lists-${c}`);
+                    u.set(c, {
+                        uuid: c,
+                        lists: i,
+                        last: null,
+                        limit: null,
+                        query: null,
+                        next: null,
+                        col: null,
+                        pointer: -1,
+                        gifs: [],
+                        reqs: []
+                    });
+                    let x = a.debounce(n, 150);
+                    i.addEventListener("scroll", () => x(c));
+                    let B = a.debounce(l, 850);
+                    document.getElementById(`gif-search-${c}`).addEventListener("input", N => B(c, N.target.value))
+                }
+                return document.getElementById(`gif-form-${c}`).classList.toggle("d-none", !1), document.getElementById(`comment-form-${c}`)?.classList.toggle("d-none", !0), w.has(c) && w.get(c)(), l(c)
+            }, t = c => {
+                let i = document.getElementById(`gif-form-${c}`);
+                return i && !i.classList.contains("d-none")
+            }, s = c => document.getElementById(`gif-result-${c}`)?.getAttribute("data-id"), h = c => document.querySelector(`[for="gif-search-${c}"]`)?.remove(), C = c => document.querySelector(`[onclick="undangan.comment.gif.back(this, '${c}')"]`)?.remove(), I = (c, i) => w.set(c, i), A = (c = null) => {
+                let i = document.getElementById(`gif-cancel-${c||o}`);
+                return {
+                    show: () => i.classList.replace("d-none", "d-flex"),
+                    hide: () => i.classList.replace("d-flex", "d-none"),
+                    click: () => i.dispatchEvent(new Event("click"))
+                }
+            }, O = () => !!p.get("tenor_key"), D = () => {
+                document.querySelector('[onclick="undangan.comment.gif.open(undangan.comment.gif.default)"]')?.classList.toggle("d-none", !p.get("tenor_key"))
+            };
+        return {
+            default: o,
+            init: () => {
+                f = he("gif"), u = new Map, w = new Map, p = R("config"), document.addEventListener("undangan.session", D)
+            },
+            get: b,
+            back: r,
+            open: e,
+            cancel: k,
+            click: y,
+            remove: v,
+            isOpen: t,
+            onOpen: I,
+            isActive: O,
+            getResultId: s,
+            buttonCancel: A,
+            removeGifSearch: h,
+            removeButtonBack: C,
+            prepareCache: L
+        }
+    })();
+    var j = (() => {
+        let o = null,
+            d = null,
+            f = null,
+            u = null,
+            w = 300,
+            p = () => `
         <div class="bg-theme-auto shadow p-3 mx-0 mt-0 mb-3 rounded-4">
             <div class="d-flex justify-content-between align-items-center placeholder-wave">
                 <span class="placeholder bg-secondary col-5 rounded-3 my-1"></span>
@@ -44,36 +950,70 @@
                 <span class="placeholder bg-secondary col-5 rounded-3"></span>
                 <span class="placeholder bg-secondary col-12 rounded-3 my-1"></span>
             </p>
-        </div>`,g=e=>`
+        </div>`,
+            g = e => `
         <button style="font-size: 0.8rem;" onclick="undangan.comment.like.love(this)" data-uuid="${e.uuid}" class="btn btn-sm btn-outline-auto ms-auto rounded-3 p-0 shadow-sm d-flex justify-content-start align-items-center" data-offline-disabled="false">
             <span class="my-0 mx-1" data-count-like="${e.like_count}">${e.like_count}</span>
             <i class="me-1 ${d.has(e.uuid)?"fa-solid fa-heart text-danger":"fa-regular fa-heart"}"></i>
-        </button>`,L=e=>{let t=`<div class="d-flex justify-content-start align-items-center" data-button-action="${e.uuid}">`;return f.get("can_reply")!==!1&&(t+=`<button style="font-size: 0.8rem;" onclick="undangan.comment.reply('${e.uuid}')" class="btn btn-sm btn-outline-auto rounded-4 py-0 me-1 shadow-sm" data-offline-disabled="false">Reply</button>`),S.isAdmin()&&e.is_admin&&(!e.gif_url||_.isActive())?t+=`<button style="font-size: 0.8rem;" onclick="undangan.comment.edit(this, ${e.is_parent?"true":"false"})" data-uuid="${e.uuid}" class="btn btn-sm btn-outline-auto rounded-4 py-0 me-1 shadow-sm" data-own="${e.own}" data-offline-disabled="false">Edit</button>`:o.has(e.uuid)&&f.get("can_edit")!==!1&&(!e.gif_url||_.isActive())&&(t+=`<button style="font-size: 0.8rem;" onclick="undangan.comment.edit(this, ${e.is_parent?"true":"false"})" data-uuid="${e.uuid}" class="btn btn-sm btn-outline-auto rounded-4 py-0 me-1 shadow-sm" data-offline-disabled="false">Edit</button>`),S.isAdmin()?t+=`<button style="font-size: 0.8rem;" onclick="undangan.comment.remove(this)" data-uuid="${e.uuid}" class="btn btn-sm btn-outline-auto rounded-4 py-0 me-1 shadow-sm" data-own="${e.own}" data-offline-disabled="false">Delete</button>`:o.has(e.uuid)&&f.get("can_delete")!==!1&&(t+=`<button style="font-size: 0.8rem;" onclick="undangan.comment.remove(this)" data-uuid="${e.uuid}" class="btn btn-sm btn-outline-auto rounded-4 py-0 me-1 shadow-sm" data-offline-disabled="false">Delete</button>`),t+="</div>",t},b=(e,t)=>{e=a.escapeHtml(e);let s=u.get("show").includes(e);return`<a class="text-theme-auto" style="font-size: 0.8rem;" onclick="undangan.comment.showOrHide(this)" data-uuid="${e}" data-uuids="${a.escapeHtml(t.join(","))}" data-show="${s?"true":"false"}" role="button" class="me-auto ms-1 py-0">${s?"Hide replies":`Show replies (${t.length})`}</a>`},E=e=>`
+        </button>`,
+            L = e => {
+                let t = `<div class="d-flex justify-content-start align-items-center" data-button-action="${e.uuid}">`;
+                return f.get("can_reply") !== !1 && (t += `<button style="font-size: 0.8rem;" onclick="undangan.comment.reply('${e.uuid}')" class="btn btn-sm btn-outline-auto rounded-4 py-0 me-1 shadow-sm" data-offline-disabled="false">Reply</button>`), S.isAdmin() && e.is_admin && (!e.gif_url || _.isActive()) ? t += `<button style="font-size: 0.8rem;" onclick="undangan.comment.edit(this, ${e.is_parent?"true":"false"})" data-uuid="${e.uuid}" class="btn btn-sm btn-outline-auto rounded-4 py-0 me-1 shadow-sm" data-own="${e.own}" data-offline-disabled="false">Edit</button>` : o.has(e.uuid) && f.get("can_edit") !== !1 && (!e.gif_url || _.isActive()) && (t += `<button style="font-size: 0.8rem;" onclick="undangan.comment.edit(this, ${e.is_parent?"true":"false"})" data-uuid="${e.uuid}" class="btn btn-sm btn-outline-auto rounded-4 py-0 me-1 shadow-sm" data-offline-disabled="false">Edit</button>`), S.isAdmin() ? t += `<button style="font-size: 0.8rem;" onclick="undangan.comment.remove(this)" data-uuid="${e.uuid}" class="btn btn-sm btn-outline-auto rounded-4 py-0 me-1 shadow-sm" data-own="${e.own}" data-offline-disabled="false">Delete</button>` : o.has(e.uuid) && f.get("can_delete") !== !1 && (t += `<button style="font-size: 0.8rem;" onclick="undangan.comment.remove(this)" data-uuid="${e.uuid}" class="btn btn-sm btn-outline-auto rounded-4 py-0 me-1 shadow-sm" data-offline-disabled="false">Delete</button>`), t += "</div>", t
+            },
+            b = (e, t) => {
+                e = a.escapeHtml(e);
+                let s = u.get("show").includes(e);
+                return `<a class="text-theme-auto" style="font-size: 0.8rem;" onclick="undangan.comment.showOrHide(this)" data-uuid="${e}" data-uuids="${a.escapeHtml(t.join(","))}" data-show="${s?"true":"false"}" role="button" class="me-auto ms-1 py-0">${s?"Hide replies":`Show replies (${t.length})`}</a>`
+            },
+            E = e => `
         <div class="d-flex justify-content-between align-items-center" id="button-${e.uuid}">
             ${L(e)}
             ${e.comments.length>0?b(e.uuid,e.comments.map(t=>t.uuid)):""}
             ${g(e)}
-        </div>`,m=e=>!e.ip||!e.user_agent||e.is_admin?"":`
+        </div>`,
+            m = e => !e.ip || !e.user_agent || e.is_admin ? "" : `
         <div class="mb-1 mt-3">
             <p class="text-theme-auto mb-1 mx-0 mt-0 p-0" style="font-size: 0.7rem;" id="ip-${e.uuid}"><i class="fa-solid fa-location-dot me-1"></i>${a.escapeHtml(e.ip)} <span class="mb-1 placeholder col-2 rounded-3"></span></p>
             <p class="text-theme-auto m-0 p-0" style="font-size: 0.7rem;"><i class="fa-solid fa-mobile-screen-button me-1"></i>${a.parseUserAgent(a.escapeHtml(e.user_agent))}</p>
-        </div>`,T=e=>e.is_parent?'class="bg-theme-auto shadow p-3 mx-0 mt-0 mb-3 rounded-4"':`class="${u.get("hidden").find(t=>t.uuid===e.uuid).show?"":"d-none"} overflow-x-scroll mw-100 border-start bg-theme-auto py-2 ps-2 pe-0 my-2 ms-2 me-0"`,H=e=>e.is_admin?`<strong class="me-1">${a.escapeHtml(e.name)}</strong><i class="fa-solid fa-certificate text-primary"></i>`:e.is_parent?`<strong class="me-1">${a.escapeHtml(e.name)}</strong><i id="badge-${e.uuid}" data-is-presence="${e.presence?"true":"false"}" class="fa-solid ${e.presence?"fa-circle-check text-success":"fa-circle-xmark text-danger"}"></i>`:`<strong>${a.escapeHtml(e.name)}</strong>`,$=async e=>{let t=`
+        </div>`,
+            T = e => e.is_parent ? 'class="bg-theme-auto shadow p-3 mx-0 mt-0 mb-3 rounded-4"' : `class="${u.get("hidden").find(t=>t.uuid===e.uuid).show?"":"d-none"} overflow-x-scroll mw-100 border-start bg-theme-auto py-2 ps-2 pe-0 my-2 ms-2 me-0"`,
+            H = e => e.is_admin ? `<strong class="me-1">${a.escapeHtml(e.name)}</strong><i class="fa-solid fa-certificate text-primary"></i>` : e.is_parent ? `<strong class="me-1">${a.escapeHtml(e.name)}</strong><i id="badge-${e.uuid}" data-is-presence="${e.presence?"true":"false"}" class="fa-solid ${e.presence?"fa-circle-check text-success":"fa-circle-xmark text-danger"}"></i>` : `<strong>${a.escapeHtml(e.name)}</strong>`,
+            $ = async e => {
+                let t = `
         <div class="d-flex justify-content-between align-items-center">
             <p class="text-theme-auto text-truncate m-0 p-0" style="font-size: 0.95rem;">${H(e)}</p>
             <small class="text-theme-auto m-0 p-0" style="font-size: 0.75rem;">${e.created_at}</small>
         </div>
-        <hr class="my-1">`;if(e.gif_url)return t+`
+        <hr class="my-1">`;
+                if (e.gif_url) return t + `
             <div class="d-flex justify-content-center align-items-center my-2">
                 <img src="${await _.get(e.gif_url)}" id="img-gif-${e.uuid}" class="img-fluid mx-auto gif-image rounded-4" alt="selected-gif">
-            </div>`;let s=e.comment.length>w,h=a.convertMarkdownToHTML(a.escapeHtml(s?e.comment.slice(0,w)+"...":e.comment));return t+`
+            </div>`;
+                let s = e.comment.length > w,
+                    h = a.convertMarkdownToHTML(a.escapeHtml(s ? e.comment.slice(0, w) + "..." : e.comment));
+                return t + `
         <p class="text-theme-auto my-1 mx-0 p-0" style="white-space: pre-wrap !important; font-size: 0.95rem;" data-comment="${a.base64Encode(e.comment)}" id="content-${e.uuid}">${h}</p>
-        ${s?`<p class="d-block mb-2 mt-0 mx-0 p-0"><a class="text-theme-auto" role="button" style="font-size: 0.85rem;" data-show="false" onclick="undangan.comment.showMore(this, '${e.uuid}')">Selengkapnya</a></p>`:""}`},n=async e=>{let t=await $(e),s=await Promise.all(e.comments.map(h=>n(h)));return`
+        ${s?`<p class="d-block mb-2 mt-0 mx-0 p-0"><a class="text-theme-auto" role="button" style="font-size: 0.85rem;" data-show="false" onclick="undangan.comment.showMore(this, '${e.uuid}')">Selengkapnya</a></p>`:""}`
+            }, n = async e => {
+                let t = await $(e),
+                    s = await Promise.all(e.comments.map(h => n(h)));
+                return `
         <div ${T(e)} id="${e.uuid}" style="overflow-wrap: break-word !important;">
             <div id="body-content-${e.uuid}" data-tapTime="0" data-liked="false" tabindex="0">${t}</div>
             ${m(e)}
             ${E(e)}
             <div id="reply-content-${e.uuid}">${s.join("")}</div>
-        </div>`};return{init:()=>{o=R("owns"),d=R("likes"),f=R("config"),u=R("comment")},renderEdit:(e,t,s,h)=>{e=a.escapeHtml(e);let C=document.createElement("div");C.classList.add("my-2"),C.id=`inner-${e}`;let I=`
+        </div>`
+            };
+        return {
+            init: () => {
+                o = R("owns"), d = R("likes"), f = R("config"), u = R("comment")
+            },
+            renderEdit: (e, t, s, h) => {
+                e = a.escapeHtml(e);
+                let C = document.createElement("div");
+                C.classList.add("my-2"), C.id = `inner-${e}`;
+                let I = `
         <p class="my-1 mx-0 p-0" style="font-size: 0.95rem;"><i class="fa-solid fa-pen me-2"></i>Edit</p>
         ${s?`
         <select class="form-select shadow-sm mb-2 rounded-4" id="form-inner-presence-${e}" data-offline-disabled="false">
@@ -85,7 +1025,14 @@
         <div class="d-flex justify-content-end align-items-center mb-0">
             <button style="font-size: 0.8rem;" onclick="undangan.comment.cancel(this, '${e}')" class="btn btn-sm btn-outline-auto rounded-4 py-0 me-1" data-offline-disabled="false">Cancel</button>
             <button style="font-size: 0.8rem;" onclick="undangan.comment.update(this)" data-uuid="${e}" class="btn btn-sm btn-outline-auto rounded-4 py-0" data-offline-disabled="false">Update</button>
-        </div>`;return a.safeInnerHTML(C,I)},renderReply:e=>{e=a.escapeHtml(e);let t=document.createElement("div");t.classList.add("my-2"),t.id=`inner-${e}`;let s=`
+        </div>`;
+                return a.safeInnerHTML(C, I)
+            },
+            renderReply: e => {
+                e = a.escapeHtml(e);
+                let t = document.createElement("div");
+                t.classList.add("my-2"), t.id = `inner-${e}`;
+                let s = `
         <p class="my-1 mx-0 p-0" style="font-size: 0.95rem;"><i class="fa-solid fa-reply me-2"></i>Reply</p>
         <div class="d-block mb-2" id="comment-form-${e}">
             <div class="position-relative">
@@ -97,7 +1044,142 @@
         <div class="d-flex justify-content-end align-items-center mb-0">
             <button style="font-size: 0.8rem;" onclick="undangan.comment.cancel(this, '${e}')" class="btn btn-sm btn-outline-auto rounded-4 py-0 me-1" data-offline-disabled="false">Cancel</button>
             <button style="font-size: 0.8rem;" onclick="undangan.comment.send(this)" data-uuid="${e}" class="btn btn-sm btn-outline-auto rounded-4 py-0" data-offline-disabled="false">Send</button>
-        </div>`;return a.safeInnerHTML(t,s)},renderLoading:p,renderReadMore:b,renderContentMany:e=>_.prepareCache().then(()=>Promise.all(e.map(t=>n(t)))).then(t=>t.join("")),renderContentSingle:e=>_.prepareCache().then(()=>n(e)),maxCommentLength:w}})();var xe=()=>window.confetti.shapeFromPath({path:"M167 72c19,-38 37,-56 75,-56 42,0 76,33 76,75 0,76 -76,151 -151,227 -76,-76 -151,-151 -151,-227 0,-42 33,-75 75,-75 38,0 57,18 76,56z",matrix:[.03333333333333333,0,0,.03333333333333333,-5.566666666666666,-5.533333333333333]});var be=(o,d=50)=>{if(!window.confetti)return;let f=Date.now()+d,u=o.getBoundingClientRect(),w=Math.max(.3,Math.min(1,u.top/window.innerHeight+.2)),p=xe(),g=["#FF69B4","#FF1493"],L=()=>{g.forEach(b=>{window.confetti({particleCount:2,angle:60,spread:55,shapes:[p],origin:{x:u.left/window.innerWidth,y:w},zIndex:1057,colors:[b]}),window.confetti({particleCount:2,angle:120,spread:55,shapes:[p],origin:{x:u.right/window.innerWidth,y:w},zIndex:1057,colors:[b]})}),Date.now()<f&&requestAnimationFrame(L)};requestAnimationFrame(L)};var J=(()=>{let o=null,d=null,f=async b=>{let E=b.firstElementChild,m=b.lastElementChild,T=b.getAttribute("data-uuid"),H=parseInt(E.getAttribute("data-count-like"));b.disabled=!0,navigator.vibrate&&navigator.vibrate(100),o.has(T)?await P(W,"/api/comment/"+o.get(T)).token(S.getToken()).send(q.statusResponse).then($=>{$.data.status&&(o.unset(T),m.classList.remove("fa-solid","text-danger"),m.classList.add("fa-regular"),E.setAttribute("data-count-like",String(H-1)))}).finally(()=>{E.innerText=E.getAttribute("data-count-like"),b.disabled=!1}):await P(Y,"/api/comment/"+T).token(S.getToken()).send(q.uuidResponse).then($=>{$.code===201&&(o.set(T,$.data.uuid),m.classList.remove("fa-regular"),m.classList.add("fa-solid","text-danger"),E.setAttribute("data-count-like",String(H+1)))}).finally(()=>{E.innerText=E.getAttribute("data-count-like"),b.disabled=!1})},u=b=>document.querySelector(`button[onclick="undangan.comment.like.love(this)"][data-uuid="${b}"]`),w=async b=>{if(!navigator.onLine)return;let E=Date.now(),m=E-parseInt(b.getAttribute("data-tapTime")),T=b.id.replace("body-content-",""),H=m<300&&m>0,$=!o.has(T)&&b.getAttribute("data-liked")!=="true";H&&$&&(be(b),b.setAttribute("data-liked","true"),await f(u(T)),b.setAttribute("data-liked","false")),b.setAttribute("data-tapTime",String(E))};return{init:()=>{d=new Map,o=R("likes")},love:f,getButtonLike:u,addListener:b=>{let E=new AbortController,m=document.getElementById(`body-content-${b}`);m.addEventListener("touchend",()=>w(m),{signal:E.signal}),d.set(b,E)},removeListener:b=>{let E=d.get(b);E&&(E.abort(),d.delete(b))}}})();var G=(()=>{let o=10,d=0,f=0,u=null,w=null,p=null,g=null,L=null,b=e=>{o=Number(e)},E=()=>o,m=()=>d,T=()=>f,H=()=>w.classList.contains("disabled")?null:w.classList.add("disabled"),$=()=>w.classList.contains("disabled")?w.classList.remove("disabled"):null,n=()=>p.classList.contains("disabled")?null:p.classList.add("disabled"),l=()=>p.classList.contains("disabled")?p.classList.remove("disabled"):null,y=e=>{n(),H();let t=a.disableButton(e,a.loader.replace("ms-0 me-1","mx-1"),!0),s=()=>{L.addEventListener("undangan.comment.done",()=>t.restore(),{once:!0}),L.addEventListener("undangan.comment.result",()=>L.scrollIntoView(),{once:!0}),L.dispatchEvent(new Event("undangan.comment.show"))};return{next:()=>{d+=o,e.innerHTML="Next"+e.innerHTML,s()},prev:()=>{d-=o,e.innerHTML=e.innerHTML+"Prev",s()}}};return{init:()=>{g=document.getElementById("pagination"),g.innerHTML=`
+        </div>`;
+                return a.safeInnerHTML(t, s)
+            },
+            renderLoading: p,
+            renderReadMore: b,
+            renderContentMany: e => _.prepareCache().then(() => Promise.all(e.map(t => n(t)))).then(t => t.join("")),
+            renderContentSingle: e => _.prepareCache().then(() => n(e)),
+            maxCommentLength: w
+        }
+    })();
+    var xe = () => window.confetti.shapeFromPath({
+        path: "M167 72c19,-38 37,-56 75,-56 42,0 76,33 76,75 0,76 -76,151 -151,227 -76,-76 -151,-151 -151,-227 0,-42 33,-75 75,-75 38,0 57,18 76,56z",
+        matrix: [.03333333333333333, 0, 0, .03333333333333333, -5.566666666666666, -5.533333333333333]
+    });
+    var be = (o, d = 50) => {
+        if (!window.confetti) return;
+        let f = Date.now() + d,
+            u = o.getBoundingClientRect(),
+            w = Math.max(.3, Math.min(1, u.top / window.innerHeight + .2)),
+            p = xe(),
+            g = ["#FF69B4", "#FF1493"],
+            L = () => {
+                g.forEach(b => {
+                    window.confetti({
+                        particleCount: 2,
+                        angle: 60,
+                        spread: 55,
+                        shapes: [p],
+                        origin: {
+                            x: u.left / window.innerWidth,
+                            y: w
+                        },
+                        zIndex: 1057,
+                        colors: [b]
+                    }), window.confetti({
+                        particleCount: 2,
+                        angle: 120,
+                        spread: 55,
+                        shapes: [p],
+                        origin: {
+                            x: u.right / window.innerWidth,
+                            y: w
+                        },
+                        zIndex: 1057,
+                        colors: [b]
+                    })
+                }), Date.now() < f && requestAnimationFrame(L)
+            };
+        requestAnimationFrame(L)
+    };
+    var J = (() => {
+        let o = null,
+            d = null,
+            f = async b => {
+                let E = b.firstElementChild,
+                    m = b.lastElementChild,
+                    T = b.getAttribute("data-uuid"),
+                    H = parseInt(E.getAttribute("data-count-like"));
+                b.disabled = !0, navigator.vibrate && navigator.vibrate(100), o.has(T) ? await P(W, "/api/comment/" + o.get(T)).token(S.getToken()).send(q.statusResponse).then($ => {
+                    $.data.status && (o.unset(T), m.classList.remove("fa-solid", "text-danger"), m.classList.add("fa-regular"), E.setAttribute("data-count-like", String(H - 1)))
+                }).finally(() => {
+                    E.innerText = E.getAttribute("data-count-like"), b.disabled = !1
+                }) : await P(Y, "/api/comment/" + T).token(S.getToken()).send(q.uuidResponse).then($ => {
+                    $.code === 201 && (o.set(T, $.data.uuid), m.classList.remove("fa-regular"), m.classList.add("fa-solid", "text-danger"), E.setAttribute("data-count-like", String(H + 1)))
+                }).finally(() => {
+                    E.innerText = E.getAttribute("data-count-like"), b.disabled = !1
+                })
+            }, u = b => document.querySelector(`button[onclick="undangan.comment.like.love(this)"][data-uuid="${b}"]`), w = async b => {
+                if (!navigator.onLine) return;
+                let E = Date.now(),
+                    m = E - parseInt(b.getAttribute("data-tapTime")),
+                    T = b.id.replace("body-content-", ""),
+                    H = m < 300 && m > 0,
+                    $ = !o.has(T) && b.getAttribute("data-liked") !== "true";
+                H && $ && (be(b), b.setAttribute("data-liked", "true"), await f(u(T)), b.setAttribute("data-liked", "false")), b.setAttribute("data-tapTime", String(E))
+            };
+        return {
+            init: () => {
+                d = new Map, o = R("likes")
+            },
+            love: f,
+            getButtonLike: u,
+            addListener: b => {
+                let E = new AbortController,
+                    m = document.getElementById(`body-content-${b}`);
+                m.addEventListener("touchend", () => w(m), {
+                    signal: E.signal
+                }), d.set(b, E)
+            },
+            removeListener: b => {
+                let E = d.get(b);
+                E && (E.abort(), d.delete(b))
+            }
+        }
+    })();
+    var G = (() => {
+        let o = 10,
+            d = 0,
+            f = 0,
+            u = null,
+            w = null,
+            p = null,
+            g = null,
+            L = null,
+            b = e => {
+                o = Number(e)
+            },
+            E = () => o,
+            m = () => d,
+            T = () => f,
+            H = () => w.classList.contains("disabled") ? null : w.classList.add("disabled"),
+            $ = () => w.classList.contains("disabled") ? w.classList.remove("disabled") : null,
+            n = () => p.classList.contains("disabled") ? null : p.classList.add("disabled"),
+            l = () => p.classList.contains("disabled") ? p.classList.remove("disabled") : null,
+            y = e => {
+                n(), H();
+                let t = a.disableButton(e, a.loader.replace("ms-0 me-1", "mx-1"), !0),
+                    s = () => {
+                        L.addEventListener("undangan.comment.done", () => t.restore(), {
+                            once: !0
+                        }), L.addEventListener("undangan.comment.result", () => L.scrollIntoView(), {
+                            once: !0
+                        }), L.dispatchEvent(new Event("undangan.comment.show"))
+                    };
+                return {
+                    next: () => {
+                        d += o, e.innerHTML = "Next" + e.innerHTML, s()
+                    },
+                    prev: () => {
+                        d -= o, e.innerHTML = e.innerHTML + "Prev", s()
+                    }
+                }
+            };
+        return {
+            init: () => {
+                g = document.getElementById("pagination"), g.innerHTML = `
         <ul class="pagination mb-2 shadow-sm rounded-4">
             <li class="page-item disabled" id="previous">
                 <button class="page-link rounded-start-4" onclick="undangan.comment.pagination.previous(this)" data-offline-disabled="false">
@@ -112,4 +1194,419 @@
                     Next<i class="fa-solid fa-circle-right ms-1"></i>
                 </button>
             </li>
-        </ul>`,L=document.getElementById("comments"),u=document.getElementById("page"),w=document.getElementById("previous"),p=document.getElementById("next")},setPer:b,getPer:E,getNext:m,reset:()=>d===0?!1:(d=0,n(),H(),!0),setTotal:e=>{if(f=Number(e),f<=o&&d===0){g.classList.add("d-none");return}let t=d/o+1,s=Math.ceil(f/o);if(u.innerText=`${t} / ${s}`,d>0&&$(),t>=s){n();return}l(),g.classList.contains("d-none")&&g.classList.remove("d-none")},geTotal:T,previous:e=>y(e).prev(),next:e=>y(e).next()}})();var re=(()=>{let o=null,d=null,f=null,u=[],w=()=>`<div class="text-center p-4 mx-0 mt-0 mb-3 bg-theme-auto rounded-4 shadow"><p class="fw-bold p-0 m-0" style="font-size: 0.95rem;">${V.on("id","\u{1F4E2} Yuk, share undangan ini biar makin rame komentarnya! \u{1F389}").on("en","\u{1F4E2} Let's share this invitation to get more comments! \u{1F389}").get()}</p></div>`,p=(r,e)=>{document.querySelector(`[data-button-action="${r}"]`).childNodes.forEach(t=>{t.disabled=e})},g=r=>{p(r,!1),document.getElementById(`inner-${r}`).remove()},L=r=>{let e=r.getAttribute("data-uuids").split(","),t=r.getAttribute("data-show")==="true",s=r.getAttribute("data-uuid"),h=d.get("show");r.setAttribute("data-show",t?"false":"true"),r.innerText=t?`Show replies (${e.length})`:"Hide replies",d.set("show",t?h.filter(C=>C!==s):[...h,s]);for(let C of e)d.set("hidden",d.get("hidden").map(I=>(I.uuid===C&&(I.show=!t),I))),document.getElementById(C).classList.toggle("d-none",t)},b=(r,e)=>{let t=document.getElementById(`content-${e}`),s=a.base64Decode(t.getAttribute("data-comment")),h=r.getAttribute("data-show")==="false";a.safeInnerHTML(t,a.convertMarkdownToHTML(a.escapeHtml(h?s:s.slice(0,j.maxCommentLength)+"..."))),r.innerText=h?"Sebagian":"Selengkapnya",r.setAttribute("data-show",h?"true":"false")},E=async r=>{if(r.comments&&await Promise.all(r.comments.map(t=>E(t))),!r.ip||!r.user_agent||r.is_admin)return;let e=t=>{let s=document.getElementById(`ip-${a.escapeHtml(r.uuid)}`);a.safeInnerHTML(s,`<i class="fa-solid fa-location-dot me-1"></i>${a.escapeHtml(r.ip)} <strong>${a.escapeHtml(t)}</strong>`)};await P(z,`https://apip.cc/api-json/${r.ip}`).withCache().withRetry().default().then(t=>t.json()).then(t=>{let s="localhost";t.status==="success"&&(t.City.length!==0&&t.RegionName.length!==0?s=t.City+" - "+t.RegionName:t.Capital.length!==0&&t.CountryName.length!==0&&(s=t.Capital+" - "+t.CountryName)),e(s)}).catch(t=>e(t.message))},m=(r,e=[])=>{let t=d.get("show"),s=C=>C.forEach(I=>{if(e.find(A=>A.uuid===I.uuid)){s(I.comments);return}e.push(q.commentShowMore(I.uuid)),s(I.comments)}),h=C=>C.forEach(I=>{if(!t.includes(I.uuid)){h(I.comments);return}I.comments.forEach(A=>{let O=e.findIndex(D=>D.uuid===A.uuid);O!==-1&&(e[O].show=!0)}),h(I.comments)});return s(r),h(r),e},T=()=>(u.forEach(r=>{J.removeListener(r)}),f.getAttribute("data-loading")==="false"&&(f.setAttribute("data-loading","true"),f.innerHTML=j.renderLoading().repeat(G.getPer())),P(z,`/api/v2/comment?per=${G.getPer()}&next=${G.getNext()}&lang=${V.getLanguage()}`).token(S.getToken()).withCache(1e3*30).withForceCache().send(q.getCommentsResponseV2).then(async r=>{f.setAttribute("data-loading","false");for(let s of u)await _.remove(s);if(r.data.lists.length===0)return f.innerHTML=w(),r;let e=s=>s.flatMap(h=>[h.uuid,...e(h.comments)]);u.splice(0,u.length,...e(r.data.lists)),d.set("hidden",m(r.data.lists,d.get("hidden")));let t=await j.renderContentMany(r.data.lists);return r.data.lists.length<G.getPer()&&(t+=w()),a.safeInnerHTML(f,t),u.forEach(s=>{J.addListener(s)}),r}).then(async r=>(f.dispatchEvent(new Event("undangan.comment.result")),r.data.lists&&S.isAdmin()&&await Promise.all(r.data.lists.map(e=>E(e))),G.setTotal(r.data.count),f.dispatchEvent(new Event("undangan.comment.done")),r)));return{gif:_,like:J,pagination:G,init:()=>{_.init(),J.init(),j.init(),G.init(),f=document.getElementById("comments"),f.addEventListener("undangan.comment.show",T),o=R("owns"),d=R("comment"),d.has("hidden")||d.set("hidden",[]),d.has("show")||d.set("show",[])},send:async r=>{let e=r.getAttribute("data-uuid"),t=document.getElementById("form-name"),s=t.value;if(s.length===0){a.notify("Name cannot be empty.").warning(),e&&t.scrollIntoView({block:"center"});return}let h=document.getElementById("form-presence");if(!e&&h&&h.value==="0"){a.notify("Please select your attendance status.").warning();return}let C=_.isOpen(e||_.default),I=_.getResultId(e||_.default),A=_.buttonCancel(e);if(C&&!I){a.notify("Gif cannot be empty.").warning();return}C&&I&&A.hide();let O=document.getElementById(`form-${e?`inner-${e}`:"comment"}`);if(!C&&O.value?.trim().length===0){a.notify("Comments cannot be empty.").warning();return}!e&&t&&!S.isAdmin()&&(t.disabled=!0),!S.isAdmin()&&h&&h.value!=="0"&&(h.disabled=!0),O&&(O.disabled=!0);let D=document.querySelector(`[onclick="undangan.comment.cancel(this, '${e}')"]`);D&&(D.disabled=!0);let K=a.disableButton(r),c=h?h.value==="1":!0;if(!S.isAdmin()){let x=R("information");x.set("name",s),e||x.set("presence",c)}let i=await P(Y,`/api/comment?lang=${V.getLanguage()}`).token(S.getToken()).body(q.postCommentRequest(e,s,c,C?null:O.value,I)).send(q.getCommentResponse);if(t&&(t.disabled=!1),O&&(O.disabled=!1),D&&(D.disabled=!1),h&&(h.disabled=!1),C&&I&&A.show(),K.restore(),!(!i||i.code!==201)){if(o.set(i.data.uuid,i.data.own),O&&(O.value=null),C&&I&&A.click(),!e){if(G.reset()){await T(),f.scrollIntoView();return}G.setTotal(G.geTotal()+1),f.children.length===G.getPer()&&f.lastElementChild.remove(),i.data.is_parent=!0,i.data.is_admin=S.isAdmin(),f.insertAdjacentHTML("afterbegin",await j.renderContentMany([i.data])),f.scrollIntoView()}if(e){d.set("hidden",d.get("hidden").concat([q.commentShowMore(i.data.uuid,!0)])),d.set("show",d.get("show").concat([e])),g(e),i.data.is_parent=!1,i.data.is_admin=S.isAdmin(),document.getElementById(`reply-content-${e}`).insertAdjacentHTML("beforeend",await j.renderContentSingle(i.data));let x=document.getElementById(`button-${e}`).querySelector("a");x&&(x.getAttribute("data-show")==="false"&&L(x),x.remove());let B=[i.data.uuid],N=document.createRange().createContextualFragment(j.renderReadMore(e,x?x.getAttribute("data-uuids").split(",").concat(B):B)),U=J.getButtonLike(e);U.parentNode.insertBefore(N,U)}J.addListener(i.data.uuid),u.push(i.data.uuid)}},edit:async(r,e)=>{let t=r.getAttribute("data-uuid");p(t,!0),S.isAdmin()&&o.set(t,r.getAttribute("data-own"));let s=document.getElementById(`badge-${t}`),h=!!s&&s.getAttribute("data-is-presence")==="true",C=document.getElementById(`img-gif-${t}`);C&&await _.remove(t);let I=e&&!S.isAdmin();if(document.getElementById(`button-${t}`).insertAdjacentElement("afterend",j.renderEdit(t,h,I,!!C)),C){_.onOpen(t,()=>{_.removeGifSearch(t),_.removeButtonBack(t)}),await _.open(t);return}let A=document.getElementById(`form-inner-${t}`),O=a.base64Decode(document.getElementById(`content-${t}`)?.getAttribute("data-comment"));A.value=O,A.setAttribute("data-original",a.base64Encode(O))},reply:r=>{p(r,!0),_.remove(r).then(()=>{_.onOpen(r,()=>_.removeGifSearch(r)),document.getElementById(`button-${r}`).insertAdjacentElement("afterend",j.renderReply(r))})},remove:async r=>{if(!a.ask("Are you sure?"))return;let e=r.getAttribute("data-uuid");S.isAdmin()&&o.set(e,r.getAttribute("data-own")),p(e,!0);let t=a.disableButton(r),s=J.getButtonLike(e);if(s.disabled=!0,!await P(de,"/api/comment/"+o.get(e)).token(S.getToken()).send(q.statusResponse).then(C=>C.data.status)){t.restore(),s.disabled=!1,p(e,!1);return}document.querySelectorAll('a[onclick="undangan.comment.showOrHide(this)"]').forEach(C=>{let I=C.getAttribute("data-uuids").split(",");if(I.includes(e)){let A=I.filter(O=>O!==e).join(",");A.length===0?C.remove():C.setAttribute("data-uuids",A)}}),o.unset(e),document.getElementById(e).remove(),f.children.length===0&&(f.innerHTML=w())},update:async r=>{let e=r.getAttribute("data-uuid"),t=!1,s=document.getElementById(`form-inner-presence-${e}`);s&&(s.disabled=!0,t=s.value==="1");let h=document.getElementById(`badge-${e}`),C=!!h&&h.getAttribute("data-is-presence")==="true",I=_.isOpen(e),A=_.getResultId(e),O=_.buttonCancel(e);I&&A&&O.hide();let D=document.getElementById(`form-inner-${e}`);if(e&&!I&&a.base64Encode(D.value)===D.getAttribute("data-original")&&C===t){g(e);return}if(!I&&D.value?.trim().length===0){a.notify("Comments cannot be empty.").warning();return}D&&(D.disabled=!0);let K=document.querySelector(`[onclick="undangan.comment.cancel(this, '${e}')"]`);K&&(K.disabled=!0);let c=a.disableButton(r),i=await P(se,`/api/comment/${o.get(e)}?lang=${V.getLanguage()}`).token(S.getToken()).body(q.updateCommentRequest(s?t:null,I?null:D.value,A)).send(q.statusResponse).then(x=>x.data.status);if(D&&(D.disabled=!1),K&&(K.disabled=!1),s&&(s.disabled=!1),c.restore(),I&&A&&O.show(),!!i){if(I&&A&&(document.getElementById(`img-gif-${e}`).src=document.getElementById(`gif-result-${e}`)?.querySelector("img").src,O.click()),g(e),!I){let x=document.querySelector(`[onclick="undangan.comment.showMore(this, '${e}')"]`),B=document.getElementById(`content-${e}`);B.setAttribute("data-comment",a.base64Encode(D.value));let N=a.convertMarkdownToHTML(a.escapeHtml(D.value));D.value.length>j.maxCommentLength?(a.safeInnerHTML(B,x?.getAttribute("data-show")==="false"?N.slice(0,j.maxCommentLength)+"...":N),x?.classList.replace("d-none","d-block")):(a.safeInnerHTML(B,N),x?.classList.replace("d-block","d-none"))}s&&(document.getElementById("form-presence").value=t?"1":"2",R("information").set("presence",t)),!(!s||!h)&&(h.classList.toggle("fa-circle-xmark",!t),h.classList.toggle("text-danger",!t),h.classList.toggle("fa-circle-check",t),h.classList.toggle("text-success",t))}},cancel:async(r,e)=>{let t=document.getElementById(`form-inner-presence-${e}`),s=t?t.value==="1":!1,h=document.getElementById(`badge-${e}`),C=h&&o.has(e)&&t?h.getAttribute("data-is-presence")==="true":!1,I=a.disableButton(r);if(_.isOpen(e)&&(!_.getResultId(e)&&C===s||a.ask("Are you sure?"))){await _.remove(e),g(e);return}let A=document.getElementById(`form-inner-${e}`);if(A.value.length===0||a.base64Encode(A.value)===A.getAttribute("data-original")&&C===s||a.ask("Are you sure?")){g(e);return}I.restore()},show:T,showMore:b,showOrHide:L}})();var ye=(()=>{let o=()=>Z.getDetailUser().then(n=>{a.safeInnerHTML(document.getElementById("dashboard-name"),`${a.escapeHtml(n.data.name)}<i class="fa-solid fa-hands text-warning ms-2"></i>`),document.getElementById("dashboard-email").textContent=n.data.email,document.getElementById("dashboard-accesskey").value=n.data.access_key,document.getElementById("button-copy-accesskey").setAttribute("data-copy",n.data.access_key),document.getElementById("form-name").value=a.escapeHtml(n.data.name),document.getElementById("form-timezone").value=n.data.tz,document.getElementById("filterBadWord").checked=!!n.data.is_filter,document.getElementById("confettiAnimation").checked=!!n.data.is_confetti_animation,document.getElementById("replyComment").checked=!!n.data.can_reply,document.getElementById("editComment").checked=!!n.data.can_edit,document.getElementById("deleteComment").checked=!!n.data.can_delete,document.getElementById("dashboard-tenorkey").value=n.data.tenor_key,R("config").set("tenor_key",n.data.tenor_key),document.dispatchEvent(new Event("undangan.session")),P(z,"/api/stats").token(S.getToken()).withCache(3e4).withForceCache().send().then(l=>{document.getElementById("count-comment").textContent=String(l.data.comments).replace(/\B(?=(\d{3})+(?!\d))/g,"."),document.getElementById("count-like").textContent=String(l.data.likes).replace(/\B(?=(\d{3})+(?!\d))/g,"."),document.getElementById("count-present").textContent=String(l.data.present).replace(/\B(?=(\d{3})+(?!\d))/g,"."),document.getElementById("count-absent").textContent=String(l.data.absent).replace(/\B(?=(\d{3})+(?!\d))/g,".")}),re.show()}),d=(n,l)=>{let y=a.disableCheckbox(n);P(W,"/api/user").token(S.getToken()).body({[l]:n.checked}).send().finally(()=>y.restore())},f=n=>{let l=a.disableButton(n),y=document.getElementById("dashboard-tenorkey");y.disabled=!0,P(W,"/api/user").token(S.getToken()).body({tenor_key:y.value.length?y.value:null}).send().then(()=>a.notify(`success ${y.value.length?"add":"remove"} tenor key`).success()).finally(()=>{y.disabled=!1,l.restore()})},u=n=>{if(!a.ask("Are you sure?"))return;let l=a.disableButton(n);P(se,"/api/key").token(S.getToken()).send(q.statusResponse).then(y=>{y.data.status&&o()}).finally(()=>l.restore())},w=n=>{let l=document.getElementById("old_password"),y=document.getElementById("new_password");if(l.value.length===0||y.value.length===0){a.notify("Password cannot be empty").warning();return}l.disabled=!0,y.disabled=!0;let k=a.disableButton(n);P(W,"/api/user").token(S.getToken()).body({old_password:l.value,new_password:y.value}).send(q.statusResponse).then(v=>{v.data.status&&(l.value=null,y.value=null,a.notify("Success change password").success())}).finally(()=>{k.restore(!0),l.disabled=!1,y.disabled=!1})},p=n=>{let l=document.getElementById("form-name");if(l.value.length===0){a.notify("Name cannot be empty").warning();return}l.disabled=!0;let y=a.disableButton(n);P(W,"/api/user").token(S.getToken()).body({name:l.value}).send(q.statusResponse).then(k=>{k.data.status&&(a.safeInnerHTML(document.getElementById("dashboard-name"),`${a.escapeHtml(l.value)}<i class="fa-solid fa-hands text-warning ms-2"></i>`),a.notify("Success change name").success())}).finally(()=>{l.disabled=!1,y.restore(!0)})},g=n=>{let l=a.disableButton(n);P(z,"/api/download").token(S.getToken()).withDownload("download","csv").send().finally(()=>l.restore())},L=()=>{let n=document.getElementById("button-change-name");n.disabled&&(n.disabled=!1)},b=()=>{let n=document.getElementById("button-change-password"),l=document.getElementById("old_password");n.disabled&&l.value.length!==0&&(n.disabled=!1)},E=(n,l=null)=>{let y=Intl.supportedValuesOf("timeZone"),k=document.getElementById("dropdown-tz-list");n.value&&n.value.trim().length>0&&(y=y.filter(v=>v.toLowerCase().includes(n.value.trim().toLowerCase()))),l===null&&document.addEventListener("click",v=>{if(!n.contains(v.currentTarget)&&!k.contains(v.currentTarget)){if(n.value.trim().length<=0){n.setCustomValidity("Timezone cannot be empty."),n.reportValidity();return}n.setCustomValidity(""),k.classList.add("d-none")}},{once:!0,capture:!0}),k.replaceChildren(),k.classList.remove("d-none"),y.slice(0,20).forEach(v=>{let r=document.createElement("button");r.type="button",r.className="list-group-item list-group-item-action py-1 small",r.textContent=`${v} (${a.getGMTOffset(v)})`,r.onclick=()=>{n.value=v,k.classList.add("d-none"),document.getElementById("button-timezone").disabled=!1},k.appendChild(r)})},m=n=>{let l=document.getElementById("form-timezone");if(l.value.length===0){a.notify("Time zone cannot be empty").warning();return}if(!Intl.supportedValuesOf("timeZone").includes(l.value)){a.notify("Timezone not supported").warning();return}l.disabled=!0;let y=a.disableButton(n);P(W,"/api/user").token(S.getToken()).body({tz:l.value}).send(q.statusResponse).then(k=>{k.data.status&&a.notify("Success change tz").success()}).finally(()=>{l.disabled=!1,y.restore(!0)})},T=()=>{a.ask("Are you sure?")&&Z.clearSession()},H=()=>{V.init(),V.setDefault("en"),re.init(),pe.init(),ae.spyTop(),document.addEventListener("hidden.bs.modal",o);try{let n=window.location.hash.slice(1);n.length>0&&(S.setToken(n),window.history.replaceState({},document.title,window.location.pathname));let l=S.decode()?.exp;if(!l||l<Date.now()/1e3)throw new Error("Invalid token");o()}catch{Z.clearSession()}};return{init:()=>(Z.init(),ae.init(),S.init(),S.isAdmin()||(R("owns").clear(),R("likes").clear(),R("config").clear(),R("comment").clear(),R("session").clear(),R("information").clear()),document.addEventListener("DOMContentLoaded",H),{util:a,theme:ae,comment:re,admin:{auth:Z,navbar:ge,logout:T,tenor:f,download:g,regenerate:u,changeName:p,changePassword:w,changeCheckboxValue:d,enableButtonName:L,enableButtonPassword:b,openLists:E,changeTz:m}})}})();(o=>{o.undangan=ye.init()})(window);})();
+        </ul>`, L = document.getElementById("comments"), u = document.getElementById("page"), w = document.getElementById("previous"), p = document.getElementById("next")
+            },
+            setPer: b,
+            getPer: E,
+            getNext: m,
+            reset: () => d === 0 ? !1 : (d = 0, n(), H(), !0),
+            setTotal: e => {
+                if (f = Number(e), f <= o && d === 0) {
+                    g.classList.add("d-none");
+                    return
+                }
+                let t = d / o + 1,
+                    s = Math.ceil(f / o);
+                if (u.innerText = `${t} / ${s}`, d > 0 && $(), t >= s) {
+                    n();
+                    return
+                }
+                l(), g.classList.contains("d-none") && g.classList.remove("d-none")
+            },
+            geTotal: T,
+            previous: e => y(e).prev(),
+            next: e => y(e).next()
+        }
+    })();
+    var re = (() => {
+        let o = null,
+            d = null,
+            f = null,
+            u = [],
+            w = () => `<div class="text-center p-4 mx-0 mt-0 mb-3 bg-theme-auto rounded-4 shadow"><p class="fw-bold p-0 m-0" style="font-size: 0.95rem;">${V.on("id","\u{1F4E2} Yuk, share undangan ini biar makin rame komentarnya! \u{1F389}").on("en","\u{1F4E2} Let's share this invitation to get more comments! \u{1F389}").get()}</p></div>`,
+            p = (r, e) => {
+                document.querySelector(`[data-button-action="${r}"]`).childNodes.forEach(t => {
+                    t.disabled = e
+                })
+            },
+            g = r => {
+                p(r, !1), document.getElementById(`inner-${r}`).remove()
+            },
+            L = r => {
+                let e = r.getAttribute("data-uuids").split(","),
+                    t = r.getAttribute("data-show") === "true",
+                    s = r.getAttribute("data-uuid"),
+                    h = d.get("show");
+                r.setAttribute("data-show", t ? "false" : "true"), r.innerText = t ? `Show replies (${e.length})` : "Hide replies", d.set("show", t ? h.filter(C => C !== s) : [...h, s]);
+                for (let C of e) d.set("hidden", d.get("hidden").map(I => (I.uuid === C && (I.show = !t), I))), document.getElementById(C).classList.toggle("d-none", t)
+            },
+            b = (r, e) => {
+                let t = document.getElementById(`content-${e}`),
+                    s = a.base64Decode(t.getAttribute("data-comment")),
+                    h = r.getAttribute("data-show") === "false";
+                a.safeInnerHTML(t, a.convertMarkdownToHTML(a.escapeHtml(h ? s : s.slice(0, j.maxCommentLength) + "..."))), r.innerText = h ? "Sebagian" : "Selengkapnya", r.setAttribute("data-show", h ? "true" : "false")
+            },
+            E = async r => {
+                if (r.comments && await Promise.all(r.comments.map(t => E(t))), !r.ip || !r.user_agent || r.is_admin) return;
+                let e = t => {
+                    let s = document.getElementById(`ip-${a.escapeHtml(r.uuid)}`);
+                    a.safeInnerHTML(s, `<i class="fa-solid fa-location-dot me-1"></i>${a.escapeHtml(r.ip)} <strong>${a.escapeHtml(t)}</strong>`)
+                };
+                await P(z, `https://apip.cc/api-json/${r.ip}`).withCache().withRetry().default().then(t => t.json()).then(t => {
+                    let s = "localhost";
+                    t.status === "success" && (t.City.length !== 0 && t.RegionName.length !== 0 ? s = t.City + " - " + t.RegionName : t.Capital.length !== 0 && t.CountryName.length !== 0 && (s = t.Capital + " - " + t.CountryName)), e(s)
+                }).catch(t => e(t.message))
+            }, m = (r, e = []) => {
+                let t = d.get("show"),
+                    s = C => C.forEach(I => {
+                        if (e.find(A => A.uuid === I.uuid)) {
+                            s(I.comments);
+                            return
+                        }
+                        e.push(q.commentShowMore(I.uuid)), s(I.comments)
+                    }),
+                    h = C => C.forEach(I => {
+                        if (!t.includes(I.uuid)) {
+                            h(I.comments);
+                            return
+                        }
+                        I.comments.forEach(A => {
+                            let O = e.findIndex(D => D.uuid === A.uuid);
+                            O !== -1 && (e[O].show = !0)
+                        }), h(I.comments)
+                    });
+                return s(r), h(r), e
+            }, T = () => (u.forEach(r => {
+                J.removeListener(r)
+            }), f.getAttribute("data-loading") === "false" && (f.setAttribute("data-loading", "true"), f.innerHTML = j.renderLoading().repeat(G.getPer())), P(z, `/api/v2/comment?per=${G.getPer()}&next=${G.getNext()}&lang=${V.getLanguage()}`).token(S.getToken()).withCache(1e3 * 30).withForceCache().send(q.getCommentsResponseV2).then(async r => {
+                f.setAttribute("data-loading", "false");
+                for (let s of u) await _.remove(s);
+                if (r.data.lists.length === 0) return f.innerHTML = w(), r;
+                let e = s => s.flatMap(h => [h.uuid, ...e(h.comments)]);
+                u.splice(0, u.length, ...e(r.data.lists)), d.set("hidden", m(r.data.lists, d.get("hidden")));
+                let t = await j.renderContentMany(r.data.lists);
+                return r.data.lists.length < G.getPer() && (t += w()), a.safeInnerHTML(f, t), u.forEach(s => {
+                    J.addListener(s)
+                }), r
+            }).then(async r => (f.dispatchEvent(new Event("undangan.comment.result")), r.data.lists && S.isAdmin() && await Promise.all(r.data.lists.map(e => E(e))), G.setTotal(r.data.count), f.dispatchEvent(new Event("undangan.comment.done")), r)));
+        return {
+            gif: _,
+            like: J,
+            pagination: G,
+            init: () => {
+                _.init(), J.init(), j.init(), G.init(), f = document.getElementById("comments"), f.addEventListener("undangan.comment.show", T), o = R("owns"), d = R("comment"), d.has("hidden") || d.set("hidden", []), d.has("show") || d.set("show", [])
+            },
+            send: async r => {
+                let e = r.getAttribute("data-uuid"),
+                    t = document.getElementById("form-name"),
+                    s = t.value;
+                if (s.length === 0) {
+                    a.notify("Name cannot be empty.").warning(), e && t.scrollIntoView({
+                        block: "center"
+                    });
+                    return
+                }
+                let h = document.getElementById("form-presence");
+                if (!e && h && h.value === "0") {
+                    a.notify("Please select your attendance status.").warning();
+                    return
+                }
+                let C = _.isOpen(e || _.default),
+                    I = _.getResultId(e || _.default),
+                    A = _.buttonCancel(e);
+                if (C && !I) {
+                    a.notify("Gif cannot be empty.").warning();
+                    return
+                }
+                C && I && A.hide();
+                let O = document.getElementById(`form-${e?`inner-${e}`:"comment"}`);
+                if (!C && O.value?.trim().length === 0) {
+                    a.notify("Comments cannot be empty.").warning();
+                    return
+                }!e && t && !S.isAdmin() && (t.disabled = !0), !S.isAdmin() && h && h.value !== "0" && (h.disabled = !0), O && (O.disabled = !0);
+                let D = document.querySelector(`[onclick="undangan.comment.cancel(this, '${e}')"]`);
+                D && (D.disabled = !0);
+                let K = a.disableButton(r),
+                    c = h ? h.value === "1" : !0;
+                if (!S.isAdmin()) {
+                    let x = R("information");
+                    x.set("name", s), e || x.set("presence", c)
+                }
+                let i = await P(Y, `/api/comment?lang=${V.getLanguage()}`).token(S.getToken()).body(q.postCommentRequest(e, s, c, C ? null : O.value, I)).send(q.getCommentResponse);
+                if (t && (t.disabled = !1), O && (O.disabled = !1), D && (D.disabled = !1), h && (h.disabled = !1), C && I && A.show(), K.restore(), !(!i || i.code !== 201)) {
+                    if (o.set(i.data.uuid, i.data.own), O && (O.value = null), C && I && A.click(), !e) {
+                        if (G.reset()) {
+                            await T(), f.scrollIntoView();
+                            return
+                        }
+                        G.setTotal(G.geTotal() + 1), f.children.length === G.getPer() && f.lastElementChild.remove(), i.data.is_parent = !0, i.data.is_admin = S.isAdmin(), f.insertAdjacentHTML("afterbegin", await j.renderContentMany([i.data])), f.scrollIntoView()
+                    }
+                    if (e) {
+                        d.set("hidden", d.get("hidden").concat([q.commentShowMore(i.data.uuid, !0)])), d.set("show", d.get("show").concat([e])), g(e), i.data.is_parent = !1, i.data.is_admin = S.isAdmin(), document.getElementById(`reply-content-${e}`).insertAdjacentHTML("beforeend", await j.renderContentSingle(i.data));
+                        let x = document.getElementById(`button-${e}`).querySelector("a");
+                        x && (x.getAttribute("data-show") === "false" && L(x), x.remove());
+                        let B = [i.data.uuid],
+                            N = document.createRange().createContextualFragment(j.renderReadMore(e, x ? x.getAttribute("data-uuids").split(",").concat(B) : B)),
+                            U = J.getButtonLike(e);
+                        U.parentNode.insertBefore(N, U)
+                    }
+                    J.addListener(i.data.uuid), u.push(i.data.uuid)
+                }
+            },
+            edit: async (r, e) => {
+                let t = r.getAttribute("data-uuid");
+                p(t, !0), S.isAdmin() && o.set(t, r.getAttribute("data-own"));
+                let s = document.getElementById(`badge-${t}`),
+                    h = !!s && s.getAttribute("data-is-presence") === "true",
+                    C = document.getElementById(`img-gif-${t}`);
+                C && await _.remove(t);
+                let I = e && !S.isAdmin();
+                if (document.getElementById(`button-${t}`).insertAdjacentElement("afterend", j.renderEdit(t, h, I, !!C)), C) {
+                    _.onOpen(t, () => {
+                        _.removeGifSearch(t), _.removeButtonBack(t)
+                    }), await _.open(t);
+                    return
+                }
+                let A = document.getElementById(`form-inner-${t}`),
+                    O = a.base64Decode(document.getElementById(`content-${t}`)?.getAttribute("data-comment"));
+                A.value = O, A.setAttribute("data-original", a.base64Encode(O))
+            },
+            reply: r => {
+                p(r, !0), _.remove(r).then(() => {
+                    _.onOpen(r, () => _.removeGifSearch(r)), document.getElementById(`button-${r}`).insertAdjacentElement("afterend", j.renderReply(r))
+                })
+            },
+            remove: async r => {
+                if (!a.ask("Are you sure?")) return;
+                let e = r.getAttribute("data-uuid");
+                S.isAdmin() && o.set(e, r.getAttribute("data-own")), p(e, !0);
+                let t = a.disableButton(r),
+                    s = J.getButtonLike(e);
+                if (s.disabled = !0, !await P(de, "/api/comment/" + o.get(e)).token(S.getToken()).send(q.statusResponse).then(C => C.data.status)) {
+                    t.restore(), s.disabled = !1, p(e, !1);
+                    return
+                }
+                document.querySelectorAll('a[onclick="undangan.comment.showOrHide(this)"]').forEach(C => {
+                    let I = C.getAttribute("data-uuids").split(",");
+                    if (I.includes(e)) {
+                        let A = I.filter(O => O !== e).join(",");
+                        A.length === 0 ? C.remove() : C.setAttribute("data-uuids", A)
+                    }
+                }), o.unset(e), document.getElementById(e).remove(), f.children.length === 0 && (f.innerHTML = w())
+            },
+            update: async r => {
+                let e = r.getAttribute("data-uuid"),
+                    t = !1,
+                    s = document.getElementById(`form-inner-presence-${e}`);
+                s && (s.disabled = !0, t = s.value === "1");
+                let h = document.getElementById(`badge-${e}`),
+                    C = !!h && h.getAttribute("data-is-presence") === "true",
+                    I = _.isOpen(e),
+                    A = _.getResultId(e),
+                    O = _.buttonCancel(e);
+                I && A && O.hide();
+                let D = document.getElementById(`form-inner-${e}`);
+                if (e && !I && a.base64Encode(D.value) === D.getAttribute("data-original") && C === t) {
+                    g(e);
+                    return
+                }
+                if (!I && D.value?.trim().length === 0) {
+                    a.notify("Comments cannot be empty.").warning();
+                    return
+                }
+                D && (D.disabled = !0);
+                let K = document.querySelector(`[onclick="undangan.comment.cancel(this, '${e}')"]`);
+                K && (K.disabled = !0);
+                let c = a.disableButton(r),
+                    i = await P(se, `/api/comment/${o.get(e)}?lang=${V.getLanguage()}`).token(S.getToken()).body(q.updateCommentRequest(s ? t : null, I ? null : D.value, A)).send(q.statusResponse).then(x => x.data.status);
+                if (D && (D.disabled = !1), K && (K.disabled = !1), s && (s.disabled = !1), c.restore(), I && A && O.show(), !!i) {
+                    if (I && A && (document.getElementById(`img-gif-${e}`).src = document.getElementById(`gif-result-${e}`)?.querySelector("img").src, O.click()), g(e), !I) {
+                        let x = document.querySelector(`[onclick="undangan.comment.showMore(this, '${e}')"]`),
+                            B = document.getElementById(`content-${e}`);
+                        B.setAttribute("data-comment", a.base64Encode(D.value));
+                        let N = a.convertMarkdownToHTML(a.escapeHtml(D.value));
+                        D.value.length > j.maxCommentLength ? (a.safeInnerHTML(B, x?.getAttribute("data-show") === "false" ? N.slice(0, j.maxCommentLength) + "..." : N), x?.classList.replace("d-none", "d-block")) : (a.safeInnerHTML(B, N), x?.classList.replace("d-block", "d-none"))
+                    }
+                    s && (document.getElementById("form-presence").value = t ? "1" : "2", R("information").set("presence", t)), !(!s || !h) && (h.classList.toggle("fa-circle-xmark", !t), h.classList.toggle("text-danger", !t), h.classList.toggle("fa-circle-check", t), h.classList.toggle("text-success", t))
+                }
+            },
+            cancel: async (r, e) => {
+                let t = document.getElementById(`form-inner-presence-${e}`),
+                    s = t ? t.value === "1" : !1,
+                    h = document.getElementById(`badge-${e}`),
+                    C = h && o.has(e) && t ? h.getAttribute("data-is-presence") === "true" : !1,
+                    I = a.disableButton(r);
+                if (_.isOpen(e) && (!_.getResultId(e) && C === s || a.ask("Are you sure?"))) {
+                    await _.remove(e), g(e);
+                    return
+                }
+                let A = document.getElementById(`form-inner-${e}`);
+                if (A.value.length === 0 || a.base64Encode(A.value) === A.getAttribute("data-original") && C === s || a.ask("Are you sure?")) {
+                    g(e);
+                    return
+                }
+                I.restore()
+            },
+            show: T,
+            showMore: b,
+            showOrHide: L
+        }
+    })();
+    var ye = (() => {
+        let o = () => Z.getDetailUser().then(n => {
+                a.safeInnerHTML(document.getElementById("dashboard-name"), `${a.escapeHtml(n.data.name)}<i class="fa-solid fa-hands text-warning ms-2"></i>`), document.getElementById("dashboard-email").textContent = n.data.email, document.getElementById("dashboard-accesskey").value = n.data.access_key, document.getElementById("button-copy-accesskey").setAttribute("data-copy", n.data.access_key), document.getElementById("form-name").value = a.escapeHtml(n.data.name), document.getElementById("form-timezone").value = n.data.tz, document.getElementById("filterBadWord").checked = !!n.data.is_filter, document.getElementById("confettiAnimation").checked = !!n.data.is_confetti_animation, document.getElementById("replyComment").checked = !!n.data.can_reply, document.getElementById("editComment").checked = !!n.data.can_edit, document.getElementById("deleteComment").checked = !!n.data.can_delete, document.getElementById("dashboard-tenorkey").value = n.data.tenor_key, R("config").set("tenor_key", n.data.tenor_key), document.dispatchEvent(new Event("undangan.session")), P(z, "/api/stats").token(S.getToken()).withCache(3e4).withForceCache().send().then(l => {
+                    document.getElementById("count-comment").textContent = String(l.data.comments).replace(/\B(?=(\d{3})+(?!\d))/g, "."), document.getElementById("count-like").textContent = String(l.data.likes).replace(/\B(?=(\d{3})+(?!\d))/g, "."), document.getElementById("count-present").textContent = String(l.data.present).replace(/\B(?=(\d{3})+(?!\d))/g, "."), document.getElementById("count-absent").textContent = String(l.data.absent).replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                }), re.show()
+            }),
+            d = (n, l) => {
+                let y = a.disableCheckbox(n);
+                P(W, "/api/user").token(S.getToken()).body({
+                    [l]: n.checked
+                }).send().finally(() => y.restore())
+            },
+            f = n => {
+                let l = a.disableButton(n),
+                    y = document.getElementById("dashboard-tenorkey");
+                y.disabled = !0, P(W, "/api/user").token(S.getToken()).body({
+                    tenor_key: y.value.length ? y.value : null
+                }).send().then(() => a.notify(`success ${y.value.length?"add":"remove"} tenor key`).success()).finally(() => {
+                    y.disabled = !1, l.restore()
+                })
+            },
+            u = n => {
+                if (!a.ask("Are you sure?")) return;
+                let l = a.disableButton(n);
+                P(se, "/api/key").token(S.getToken()).send(q.statusResponse).then(y => {
+                    y.data.status && o()
+                }).finally(() => l.restore())
+            },
+            w = n => {
+                let l = document.getElementById("old_password"),
+                    y = document.getElementById("new_password");
+                if (l.value.length === 0 || y.value.length === 0) {
+                    a.notify("Password cannot be empty").warning();
+                    return
+                }
+                l.disabled = !0, y.disabled = !0;
+                let k = a.disableButton(n);
+                P(W, "/api/user").token(S.getToken()).body({
+                    old_password: l.value,
+                    new_password: y.value
+                }).send(q.statusResponse).then(v => {
+                    v.data.status && (l.value = null, y.value = null, a.notify("Success change password").success())
+                }).finally(() => {
+                    k.restore(!0), l.disabled = !1, y.disabled = !1
+                })
+            },
+            p = n => {
+                let l = document.getElementById("form-name");
+                if (l.value.length === 0) {
+                    a.notify("Name cannot be empty").warning();
+                    return
+                }
+                l.disabled = !0;
+                let y = a.disableButton(n);
+                P(W, "/api/user").token(S.getToken()).body({
+                    name: l.value
+                }).send(q.statusResponse).then(k => {
+                    k.data.status && (a.safeInnerHTML(document.getElementById("dashboard-name"), `${a.escapeHtml(l.value)}<i class="fa-solid fa-hands text-warning ms-2"></i>`), a.notify("Success change name").success())
+                }).finally(() => {
+                    l.disabled = !1, y.restore(!0)
+                })
+            },
+            g = n => {
+                let l = a.disableButton(n);
+                P(z, "/api/download").token(S.getToken()).withDownload("download", "csv").send().finally(() => l.restore())
+            },
+            L = () => {
+                let n = document.getElementById("button-change-name");
+                n.disabled && (n.disabled = !1)
+            },
+            b = () => {
+                let n = document.getElementById("button-change-password"),
+                    l = document.getElementById("old_password");
+                n.disabled && l.value.length !== 0 && (n.disabled = !1)
+            },
+            E = (n, l = null) => {
+                let y = Intl.supportedValuesOf("timeZone"),
+                    k = document.getElementById("dropdown-tz-list");
+                n.value && n.value.trim().length > 0 && (y = y.filter(v => v.toLowerCase().includes(n.value.trim().toLowerCase()))), l === null && document.addEventListener("click", v => {
+                    if (!n.contains(v.currentTarget) && !k.contains(v.currentTarget)) {
+                        if (n.value.trim().length <= 0) {
+                            n.setCustomValidity("Timezone cannot be empty."), n.reportValidity();
+                            return
+                        }
+                        n.setCustomValidity(""), k.classList.add("d-none")
+                    }
+                }, {
+                    once: !0,
+                    capture: !0
+                }), k.replaceChildren(), k.classList.remove("d-none"), y.slice(0, 20).forEach(v => {
+                    let r = document.createElement("button");
+                    r.type = "button", r.className = "list-group-item list-group-item-action py-1 small", r.textContent = `${v} (${a.getGMTOffset(v)})`, r.onclick = () => {
+                        n.value = v, k.classList.add("d-none"), document.getElementById("button-timezone").disabled = !1
+                    }, k.appendChild(r)
+                })
+            },
+            m = n => {
+                let l = document.getElementById("form-timezone");
+                if (l.value.length === 0) {
+                    a.notify("Time zone cannot be empty").warning();
+                    return
+                }
+                if (!Intl.supportedValuesOf("timeZone").includes(l.value)) {
+                    a.notify("Timezone not supported").warning();
+                    return
+                }
+                l.disabled = !0;
+                let y = a.disableButton(n);
+                P(W, "/api/user").token(S.getToken()).body({
+                    tz: l.value
+                }).send(q.statusResponse).then(k => {
+                    k.data.status && a.notify("Success change tz").success()
+                }).finally(() => {
+                    l.disabled = !1, y.restore(!0)
+                })
+            },
+            T = () => {
+                a.ask("Are you sure?") && Z.clearSession()
+            },
+            H = () => {
+                V.init(), V.setDefault("en"), re.init(), pe.init(), ae.spyTop(), document.addEventListener("hidden.bs.modal", o);
+                try {
+                    let n = window.location.hash.slice(1);
+                    n.length > 0 && (S.setToken(n), window.history.replaceState({}, document.title, window.location.pathname));
+                    let l = S.decode()?.exp;
+                    if (!l || l < Date.now() / 1e3) throw new Error("Invalid token");
+                    o()
+                } catch {
+                    Z.clearSession()
+                }
+            };
+        return {
+            init: () => (Z.init(), ae.init(), S.init(), S.isAdmin() || (R("owns").clear(), R("likes").clear(), R("config").clear(), R("comment").clear(), R("session").clear(), R("information").clear()), document.addEventListener("DOMContentLoaded", H), {
+                util: a,
+                theme: ae,
+                comment: re,
+                admin: {
+                    auth: Z,
+                    navbar: ge,
+                    logout: T,
+                    tenor: f,
+                    download: g,
+                    regenerate: u,
+                    changeName: p,
+                    changePassword: w,
+                    changeCheckboxValue: d,
+                    enableButtonName: L,
+                    enableButtonPassword: b,
+                    openLists: E,
+                    changeTz: m
+                }
+            })
+        }
+    })();
+    (o => {
+        o.undangan = ye.init()
+    })(window);
+})();
