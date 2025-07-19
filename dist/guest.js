@@ -1719,7 +1719,7 @@
                         dates: `${w("2026-12-22 07:30")}/${w("2026-12-22 10:00")}`,
                         details: "Với tất cả lòng trân trọng, chúng tôi trân trọng kính mời quý vị đến dự lễ thành hôn của chúng tôi. Xin chân thành cảm ơn sự quan tâm và những lời chúc phúc của quý vị - đó là niềm hạnh phúc và vinh dự lớn lao đối với chúng tôi.",
                         location: "180A, ấp Đường Gỗ Vàm, xã Long Thạnh, tỉnh Ang Giang.",
-                        ctz: s.get("tz")
+                        ctz: s.get("Asia/Ho_Chi_Minh")
                     });
                 m.search = i.toString(), document.querySelector("#home button")?.addEventListener("click", () => window.open(m, "_blank"))
             }, p = () => (S.add(), {
