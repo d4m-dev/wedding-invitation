@@ -1,22 +1,22 @@
 <!doctype html>
-<html lang="en" data-bs-theme="auto">
+<html lang="vi" data-bs-theme="auto">
 
 <head>
     <!-- Common -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Dashboard Ulems">
-    <title>Dashboard Ulems</title>
+    <meta name="description" content="Dashboard">
+    <title>Dashboard</title>
 
     <!-- Appearance -->
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Dashboard Ulems">
+    <meta name="apple-mobile-web-app-title" content="Dashboard">
     <meta name="theme-color" content="#f8f9fa">
     <meta name="color-scheme" content="dark light">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="shortcut icon" type="image/x-icon" href="https://ulems.my.id/assets/favicon.ico">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://ulems.my.id/assets/images/icon-192x192.png">
-    <link rel="icon" type="image/x-icon" href="https://ulems.my.id/assets/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="./assets/favicon.ico">
+    <link rel="apple-touch-icon" sizes="192x192" href="./assets/images/icon-192x192.png">
+    <link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
 
     <!-- Preconnect CDN -->
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -55,13 +55,13 @@
             <li class="nav-item">
                 <button class="nav-link active" onclick="undangan.admin.navbar.buttonNavHome(this)">
                     <i class="fa-solid fa-house"></i>
-                    <span class="d-block" style="font-size: 0.7rem;">Home</span>
+                    <span class="d-block" style="font-size: 0.7rem;">Trang Chủ</span>
                 </button>
             </li>
             <li class="nav-item">
                 <button class="nav-link" onclick="undangan.admin.navbar.buttonNavSetting(this)">
                     <i class="fa-solid fa-gear"></i>
-                    <span class="d-block" style="font-size: 0.7rem;">Setting</span>
+                    <span class="d-block" style="font-size: 0.7rem;">Cài Đặt</span>
                 </button>
             </li>
         </ul>
@@ -72,7 +72,7 @@
 
         <!-- Header -->
         <div class="d-none d-sm-flex justify-content-between align-items-center mt-4 mb-5 pt-1">
-            <h4 class="m-0 p-0 flex-grow-1 fw-bold">Undangan<i class="fa-solid fa-fire text-danger ms-2"></i></h4>
+            <h4 class="m-0 p-0 flex-grow-1 fw-bold">Wedding Invitation<i class="fa-solid fa-fire text-danger ms-2"></i></h4>
             <div class="m-0 p-0 flex-grow-1 text-end" id="dashboard-name" style="font-size: 1.4rem;">
                 <div class="placeholder-wave">
                     <span class="placeholder col-6 rounded-4"></span>
@@ -88,12 +88,12 @@
                 <ul class="nav flex-column w-100 nav-pills pe-4" role="tablist">
                     <li class="nav-item pe-2" role="presentation">
                         <button class="btn-theme-auto nav-link w-100 text-start fw-semibold mb-1 rounded-4 shadow-sm active" data-bs-toggle="pill" data-bs-target="#pills-home" id="button-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
-                            <i class="fa-solid fa-house ms-3 me-2"></i>Home
+                            <i class="fa-solid fa-house ms-3 me-2"></i>Trang Chủ
                         </button>
                     </li>
                     <li class="nav-item pe-2" role="presentation">
                         <button class="btn-theme-auto nav-link w-100 text-start fw-semibold my-1 rounded-4 shadow-sm" data-bs-toggle="pill" data-bs-target="#pills-setting" id="button-setting" type="button" role="tab" aria-controls="pills-setting" aria-selected="false">
-                            <i class="fa-solid fa-gear ms-3 me-2"></i>Setting
+                            <i class="fa-solid fa-gear ms-3 me-2"></i>Cài Đặt
                         </button>
                     </li>
                     <li class="nav-item pe-2" role="presentation">
@@ -101,7 +101,7 @@
                     </li>
                     <li class="nav-item pe-2" role="presentation">
                         <button class="btn-theme-auto logout nav-link w-100 text-start fw-semibold mt-1 rounded-4 shadow-sm" onclick="undangan.admin.logout()" type="button" role="tab" aria-selected="false">
-                            <i class="fa-solid fa-right-from-bracket ms-3 me-2"></i>Logout
+                            <i class="fa-solid fa-right-from-bracket ms-3 me-2"></i>Đăng Xuất
                         </button>
                     </li>
                 </ul>
@@ -117,10 +117,10 @@
                         <!-- Sub Header -->
                         <div class="rounded-4 p-2 mb-4 shadow" style="background-color: var(--bs-gray-200)">
                             <div class="d-flex justify-content-between">
-                                <h5 class="fw-bold my-1 ms-0 p-0" style="color: var(--bs-gray-900); font-size: 1rem;"><i class="fa-solid fa-home mx-2"></i>Home</h5>
+                                <h5 class="fw-bold my-1 ms-0 p-0" style="color: var(--bs-gray-900); font-size: 1rem;"><i class="fa-solid fa-home mx-2"></i>Trang Chủ</h5>
                                 <div class="d-flex">
                                     <button class="btn btn-success rounded-3 btn-sm shadow-sm my-0 ms-0 me-2 pb-0" onclick="undangan.admin.download(this)" data-offline-disabled="false" aria-label="Download comment">
-                                        <i class="fa-solid fa-download"></i><span class="d-none d-sm-inline ms-2">Download</span>
+                                        <i class="fa-solid fa-download"></i><span class="d-none d-sm-inline ms-2">Tải Xuống</span>
                                     </button>
                                     <button class="btn btn-secondary rounded-3 btn-sm shadow-sm m-0 pb-0" onclick="undangan.theme.change()" aria-label="Change theme">
                                         <i class="fa-solid fa-circle-half-stroke"></i><span class="d-none d-sm-inline ms-2">Theme</span>
@@ -135,7 +135,7 @@
                                 <div class="rounded-4 shadow p-3 border-0" style="background: #8573F1;">
                                     <div class="row align-items-center" style="color: var(--bs-gray-100);">
                                         <div class="col-9">
-                                            <p class="fw-bold m-0 p-0">Comments</p>
+                                            <p class="fw-bold m-0 p-0">Lời Chúc</p>
                                             <div class="fw-bold m-0 p-0" id="count-comment">
                                                 <div class="placeholder-wave">
                                                     <span class="placeholder col-8 rounded-3"></span>
@@ -157,7 +157,7 @@
                                 <div class="rounded-4 shadow p-3 border-0" style="background: #7A5CD9;">
                                     <div class="row align-items-center" style="color: var(--bs-gray-100);">
                                         <div class="col-9">
-                                            <p class="fw-bold m-0 p-0">Present</p>
+                                            <p class="fw-bold m-0 p-0">Tham Dự</p>
                                             <div class="fw-bold m-0 p-0" id="count-present">
                                                 <div class="placeholder-wave">
                                                     <span class="placeholder col-8 rounded-3"></span>
@@ -179,7 +179,7 @@
                                 <div class="rounded-4 shadow p-3 border-0" style="background: #6546B1;">
                                     <div class="row align-items-center" style="color: var(--bs-gray-100);">
                                         <div class="col-9">
-                                            <p class="fw-bold m-0 p-0">Absent</p>
+                                            <p class="fw-bold m-0 p-0">Vắng Mặt</p>
                                             <div class="fw-bold m-0 p-0" id="count-absent">
                                                 <div class="placeholder-wave">
                                                     <span class="placeholder col-8 rounded-3"></span>
@@ -201,7 +201,7 @@
                                 <div class="rounded-4 shadow p-3 border-0" style="background: #4F3392;">
                                     <div class="row align-items-center" style="color: var(--bs-gray-100);">
                                         <div class="col-9">
-                                            <p class="fw-bold m-0 p-0">Likes</p>
+                                            <p class="fw-bold m-0 p-0">Lượt Thích</p>
                                             <div class="fw-bold m-0 p-0" id="count-like">
                                                 <div class="placeholder-wave">
                                                     <span class="placeholder col-8 rounded-3"></span>
@@ -237,7 +237,7 @@
                                     <div class="d-none mb-3" id="gif-form-default"></div>
 
                                     <div class="d-flex justify-content-end mb-0">
-                                        <button onclick="undangan.comment.send(this)" class="btn btn-primary btn-sm rounded-4 shadow-sm" data-offline-disabled="false"><i class="fa-solid fa-paper-plane me-2"></i>Send</button>
+                                        <button onclick="undangan.comment.send(this)" class="btn btn-primary btn-sm rounded-4 shadow-sm" data-offline-disabled="false"><i class="fa-solid fa-paper-plane me-2"></i>Gửi</button>
                                     </div>
                                 </div>
                             </div>
@@ -257,7 +257,7 @@
 
                         <!-- Sub Header -->
                         <div class="rounded-4 p-2 mb-4 shadow" style="background-color: var(--bs-gray-200)">
-                            <h5 class="fw-bold my-1 ms-0 p-0" style="color: var(--bs-gray-900); font-size: 1rem;"><i class="fa-solid fa-gear mx-2"></i>Setting</h5>
+                            <h5 class="fw-bold my-1 ms-0 p-0" style="color: var(--bs-gray-900); font-size: 1rem;"><i class="fa-solid fa-gear mx-2"></i>Cài Đặt</h5>
                         </div>
 
                         <!-- Email -->
@@ -268,7 +268,7 @@
 
                         <!-- Name -->
                         <div class="p-3 bg-theme-auto mb-3 rounded-4 shadow">
-                            <p class="mx-0 mt-0 mb-1 p-0 fw-bold"><i class="fa-solid fa-person me-2"></i>Name</p>
+                            <p class="mx-0 mt-0 mb-1 p-0 fw-bold"><i class="fa-solid fa-person me-2"></i>Tên</p>
                             <form>
                                 <div class="mb-3">
                                     <input type="text" class="form-control form-control-sm rounded-4 shadow-sm" id="form-name" minlength="2" maxlength="50" name="form-name" oninput="undangan.admin.enableButtonName()" autocomplete="name" data-offline-disabled="false">
@@ -276,7 +276,7 @@
                             </form>
 
                             <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-sm btn-primary rounded-4 shadow-sm" id="button-change-name" onclick="undangan.admin.changeName(this)" disabled data-offline-disabled="false">Change</button>
+                                <button type="button" class="btn btn-sm btn-primary rounded-4 shadow-sm" id="button-change-name" onclick="undangan.admin.changeName(this)" disabled data-offline-disabled="false">Thay đổi</button>
                             </div>
                         </div>
 
@@ -296,7 +296,7 @@
 
                         <!-- Time Zone -->
                         <div class="p-3 bg-theme-auto mb-3 rounded-4 shadow">
-                            <p class="mx-0 mt-0 mb-1 p-0 fw-bold"><i class="fa-solid fa-location-dot me-2"></i>Time Zone</p>
+                            <p class="mx-0 mt-0 mb-1 p-0 fw-bold"><i class="fa-solid fa-location-dot me-2"></i>Múi Giờ</p>
                             <form>
                                 <div class="position-relative mb-3">
                                     <input type="text" class="form-control form-control-sm rounded-4 shadow-sm" id="form-timezone" oninput="undangan.admin.openLists(this, this.value)" onclick="undangan.admin.openLists(this)" autocomplete="off" data-offline-disabled="false">
@@ -305,7 +305,7 @@
                             </form>
 
                             <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-sm btn-primary rounded-4 shadow-sm" id="button-timezone" onclick="undangan.admin.changeTz(this)" disabled data-offline-disabled="false">Change</button>
+                                <button type="button" class="btn btn-sm btn-primary rounded-4 shadow-sm" id="button-timezone" onclick="undangan.admin.changeTz(this)" disabled data-offline-disabled="false">Thay đổi</button>
                             </div>
                         </div>
 
@@ -319,7 +319,7 @@
                             </div>
 
                             <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-sm btn-primary rounded-4 shadow-sm" onclick="undangan.admin.tenor(this)" data-offline-disabled="false">Save</button>
+                                <button type="button" class="btn btn-sm btn-primary rounded-4 shadow-sm" onclick="undangan.admin.tenor(this)" data-offline-disabled="false">Lưu</button>
                             </div>
                         </div>
 
@@ -351,7 +351,7 @@
 
                         <!-- Change Password -->
                         <div class="p-3 bg-theme-auto mb-3 rounded-4 shadow">
-                            <p class="mx-0 mt-0 mb-1 p-0 fw-bold"><i class="fa-solid fa-lock me-2"></i>Change Password</p>
+                            <p class="mx-0 mt-0 mb-1 p-0 fw-bold"><i class="fa-solid fa-lock me-2"></i>Thay đổi Mật khẩu</p>
                             <form>
                                 <input hidden type="text" name="username" autocomplete="username" value="...">
                                 <div class="my-2">
@@ -363,7 +363,7 @@
                             </form>
 
                             <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-sm btn-primary rounded-4 shadow-sm" id="button-change-password" onclick="undangan.admin.changePassword(this)" disabled data-offline-disabled="false">Change</button>
+                                <button type="button" class="btn btn-sm btn-primary rounded-4 shadow-sm" id="button-change-password" onclick="undangan.admin.changePassword(this)" disabled data-offline-disabled="false">Thay đổi</button>
                             </div>
                         </div>
 
@@ -371,14 +371,14 @@
                         <div class="d-md-none d-lg-none d-xl-none">
                             <div class="p-3 bg-theme-auto mb-3 rounded-4 shadow">
                                 <button type="button" class="btn btn-danger btn-sm w-100 text-center fw-semibold rounded-4 shadow-sm" onclick="undangan.admin.logout()">
-                                    <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
+                                    <i class="fa-solid fa-right-from-bracket me-2"></i>Đăng Xuất
                                 </button>
                             </div>
                         </div>
 
                         <div class="p-3 bg-theme-auto mb-4 rounded-4 shadow">
                             <p class="mx-0 mt-0 mb-1 p-0 fw-bold"><i class="fa-solid fa-heart me-2"></i>Love Project</p>
-                            <p class="m-0 p-0">Discover and support this project on <i class="fa-brands fa-github me-1"></i><a target="_blank" href="https://github.com/dewanakl/undangan">GitHub</a></p>
+                            <p class="m-0 p-0">Discover and support this project on <i class="fa-brands fa-github me-1"></i><a target="_blank" href="https://github.com/d4m-dev/">GitHub</a></p>
                         </div>
                     </section>
                 </div>
