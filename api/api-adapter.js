@@ -8,6 +8,12 @@
 
     // Store original fetch
     const originalFetch = window.fetch;
+
+    // Force legacy API base URL to current origin so /api/* calls are intercepted locally
+    const existingDataUrl = document.body.getAttribute('data-url');
+    if (!existingDataUrl || existingDataUrl.includes('supabase.co')) {
+        document.body.setAttribute('data-url', window.location.origin);
+    }
     
     // Helper to check if Supabase is configured
     function isSupabaseConfigured() {

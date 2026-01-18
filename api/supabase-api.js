@@ -278,15 +278,15 @@ window.supabaseAPI = new SupabaseAPI();
  * Check if backend is configured
  */
 window.supabaseAPI.isConfigured = function() {
-    const url = document.body.getAttribute('data-url');
-    const key = document.body.getAttribute('data-key');
+    const url = document.body.getAttribute('data-supabase-url') || document.body.getAttribute('data-url');
+    const key = document.body.getAttribute('data-supabase-key') || document.body.getAttribute('data-key');
     return url && key && url.includes('supabase.co');
 };
 
 // Auto-initialize from body attributes when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    const url = document.body.getAttribute('data-url');
-    const key = document.body.getAttribute('data-key');
+    const url = document.body.getAttribute('data-supabase-url') || document.body.getAttribute('data-url');
+    const key = document.body.getAttribute('data-supabase-key') || document.body.getAttribute('data-key');
     
     if (url && key && url !== 'YOUR_SUPABASE_URL/rest/v1' && key !== 'YOUR_SUPABASE_KEY') {
         try {
@@ -298,11 +298,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.warn('⚠️ Supabase credentials not configured. Guestbook features will be disabled.');
         console.info('ℹ️ To enable guestbook, follow instructions in QUICK_START_VI.md');
-        
-        // Set a dummy URL to prevent "new URL()" errors in guest.js
-        if (!url) {
-            document.body.setAttribute('data-url', 'https://api.example.com');
-        }
         
         // Disable comment section UI if not configured
         setTimeout(() => {
