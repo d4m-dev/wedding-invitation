@@ -274,15 +274,61 @@ class SupabaseAPI {
 // Create global instance
 window.supabaseAPI = new SupabaseAPI();
 
+/**
+ * Check if backend is configured
+ */
+window.supabaseAPI.isConfigured = function() {
+    const url = document.body.getAttribute('data-url');
+    const key = document.body.getAttribute('data-key');
+    return url && key && url.includes('supabase.co');
+};
+
 // Auto-initialize from body attributes when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     const url = document.body.getAttribute('data-url');
     const key = document.body.getAttribute('data-key');
     
-    if (url && key) {
-        window.supabaseAPI.init(url, key);
-        console.log('✅ Supabase API initialized');
+    if (url && key && url !== 'YOUR_SUPABASE_URL/rest/v1' && key !== 'YOUR_SUPABASE_KEY') {
+        try {
+            window.supabaseAPI.init(url, key);
+            console.log('✅ Supabase API initialized');
+        } catch (error) {
+            console.warn('⚠️ Supabase initialization failed:', error.message);
+        }
     } else {
-        console.warn('⚠️ Supabase credentials not found in data-url and data-key attributes');
+        console.warn('⚠️ Supabase credentials not configured. Guestbook features will be disabled.');
+        console.info('ℹ️ To enable guestbook, follow instructions in QUICK_START_VI.md');
+        
+        // Set a dummy URL to prevent "new URL()" errors in guest.js
+        if (!url) {
+            document.body.setAttribute('data-url', 'https://api.example.com');
+        }
+        
+        // Disable comment section UI if not configured
+        setTimeout(() => {
+            const commentSection = document.getElementById('comment');
+            if (commentSection) {
+                const alertBox = document.createElement('div');
+                alertBox.className = 'alert alert-warning mx-3 mb-3 rounded-4';
+                alertBox.innerHTML = `
+                    <h5 class="mb-3"><i class="fa-solid fa-triangle-exclamation me-2"></i>Tính năng Guestbook chưa được kích hoạt</h5>
+                    <p class="mb-2">Để kích hoạt tính năng để lại lời chúc, vui lòng:</p>
+                    <ol class="mb-2">
+                        <li>Tạo tài khoản Supabase miễn phí tại <a href="https://supabase.com" target="_blank" class="alert-link">supabase.com</a></li>
+                        <li>Làm theo hướng dẫn trong file <strong>QUICK_START_VI.md</strong> (có trong source code)</li>
+                        <li>Cấu hình credentials trong file <code>index.html</code></li>
+                    </ol>
+                    <p class="mb-0 small"><i class="fa-solid fa-info-circle me-1"></i>Setup chỉ mất ~5 phút và hoàn toàn MIỄN PHÍ!</p>
+                `;
+                commentSection.insertBefore(alertBox, commentSection.firstChild);
+                
+                // Hide comment form
+                const commentForm = commentSection.querySelector('.border.rounded-5.shadow');
+                if (commentForm) {
+                    commentForm.style.opacity = '0.5';
+                    commentForm.style.pointerEvents = 'none';
+                }
+            }
+        }, 1000);
     }
 });
