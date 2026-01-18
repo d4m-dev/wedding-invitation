@@ -67,12 +67,25 @@
 
     <!-- Dependencies JS -->
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha256-NfRUfZNkERrKSFA0c1a8VmCplPDYtpTYj5lQmKe1R/o=" crossorigin="anonymous"></script>
+    <!-- Supabase API Wrapper -->
+    <script src="./api/supabase-api.js"></script>
     <script src="./dist/guest.js"></script>
 </head>
 
-<!--<body data-key="" data-url="" data-audio="./assets/music/weddingsongs_ido.mp3" data-confetti="true" data-time="2026-12-22 07:30:00"> -->
-
-<body data-audio="./assets/music/weddingsongs_ido.mp3" data-confetti="true" data-time="2026-12-22 07:30:00">
+<!-- 
+    IMPORTANT: Replace YOUR_SUPABASE_URL and YOUR_SUPABASE_KEY with your actual Supabase credentials
+    Get them from: https://supabase.com/dashboard > Settings > API
+    
+    Example:
+    data-url="https://abcdefghijk.supabase.co/rest/v1"
+    data-key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+-->
+<body 
+    data-url="https://adnooupemxlhgydtvoeo.supabase.co/rest/v1" 
+    data-key="sb_publishable_4MbuWni_1qq_mqtlMKUW7A_Hecp0SQ-"
+    data-audio="./assets/music/weddingsongs_ido.mp3" 
+    data-confetti="true" 
+    data-time="2026-12-22 07:30:00">
     <!-- Root Invitation -->
     <div class="row m-0 p-0 opacity-0" id="root">
 

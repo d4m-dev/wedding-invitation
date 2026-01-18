@@ -1,0 +1,25 @@
+# Environment variables (local development only)
+.env
+.env.local
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Optional: Uncomment if you don't want to commit dist/
+# dist/
+
+# Temporary files
+*.tmp
+*.temp
