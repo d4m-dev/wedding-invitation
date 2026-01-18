@@ -172,11 +172,14 @@
     // Handle POST /api/comment - create comment
     async function handlePostComment(request) {
         if (!isSupabaseConfigured()) {
+            console.warn('[API Adapter] Supabase not configured');
             return createResponse({ code: 400, data: { message: 'Backend not configured' } }, 400);
         }
 
         try {
             const body = await request.json();
+            console.log('[API Adapter] POST /api/comment - Request body:', body);
+            
             const ip = await getClientIP();
 
             const data = {
@@ -190,10 +193,13 @@
                 is_admin: false
             };
 
+            console.log('[API Adapter] Sending to Supabase:', data);
             const result = await window.supabaseAPI.post('comments', data);
+            console.log('[API Adapter] Supabase response:', result);
+            
             const newComment = result[0];
 
-            return createResponse({
+            const responseData = {
                 code: 200,
                 data: {
                     uuid: newComment.uuid,
@@ -207,10 +213,14 @@
                     is_loved: false,
                     own: true
                 }
-            });
+            };
+
+            console.log('[API Adapter] Returning response:', responseData);
+            return createResponse(responseData);
 
         } catch (error) {
-            console.error('Error creating comment:', error);
+            console.error('[API Adapter] Error creating comment:', error);
+            console.error('[API Adapter] Error stack:', error.stack);
             return createResponse({ code: 500, data: { message: error.message } }, 500);
         }
     }
@@ -295,7 +305,7 @@
             const parsedUrl = new URL(urlString, window.location.origin);
             const path = parsedUrl.pathname;
 
-            console.log('[API Adapter] Intercepting:', path);
+            console.log('[API Adapter] Intercepting:', path, 'Method:', options.method || 'GET');
 
             // Route to appropriate handler
             if (path === '/api/session') {
@@ -306,12 +316,19 @@
                 return handleConfig();
             }
             
-            if (path.startsWith('/api/v2/comment')) {
+            if (path.startsWith('/api/v2/comment') && (!options.method || options.method === 'GET')) {
                 return handleGetComments(parsedUrl);
             }
 
             if (path === '/api/comment' && options.method === 'POST') {
+                console.log('[API Adapter] Handling POST /api/comment');
                 return handlePostComment(new Request(url, options));
+            }
+            
+            if (path.startsWith('/api/comment') && !options.method) {
+                // Default to POST if no method specified for /api/comment
+                console.log('[API Adapter] Defaulting to POST for /api/comment');
+                return handlePostComment(new Request(url, {...options, method: 'POST'}));
             }
 
             const commentMatch = path.match(/^\/api\/comment\/([a-f0-9-]+)$/);
