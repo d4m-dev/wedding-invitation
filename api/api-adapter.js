@@ -71,10 +71,9 @@
     async function handleGetComments(url) {
         if (!isSupabaseConfigured()) {
             return createResponse({
-                code: 200,
                 data: {
-                    lists: [],
-                    hasMore: false
+                    count: 0,
+                    lists: []
                 }
             });
         }
@@ -85,14 +84,27 @@
             const next = parseInt(params.get('next')) || 0;
             const offset = next * per;
 
+            const supabaseUrl = window.supabaseAPI.url;
+            const supabaseHeaders = {
+                'apikey': window.supabaseAPI.key,
+                'Authorization': `Bearer ${window.supabaseAPI.key}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'count=exact'
+            };
+
             // Get parent comments from Supabase
-            const response = await window.supabaseAPI.get('comments', {
-                'select': '*',
-                'is.parent_uuid': 'null',
-                'order': 'created_at.desc',
-                'limit': per,
-                'offset': offset
+            const listResponse = await originalFetch(`${supabaseUrl}/comments?select=*&parent_uuid=is.null&order=created_at.desc&limit=${per}&offset=${offset}`, {
+                method: 'GET',
+                headers: supabaseHeaders
             });
+
+            if (!listResponse.ok) {
+                throw new Error(`Supabase list error: ${listResponse.statusText}`);
+            }
+
+            const response = await listResponse.json();
+            const contentRange = listResponse.headers.get('Content-Range');
+            const totalCount = contentRange && contentRange.includes('/') ? parseInt(contentRange.split('/')[1]) : response.length;
 
             const ip = await getClientIP();
             
@@ -106,8 +118,7 @@
 
                 // Get like count
                 const likes = await window.supabaseAPI.get('likes', {
-                    'comment_uuid': `eq.${comment.uuid}`,
-                    'select': 'count'
+                    'comment_uuid': `eq.${comment.uuid}`
                 });
 
                 // Check if user liked
@@ -119,8 +130,7 @@
                 // Transform replies
                 const transformedReplies = await Promise.all(replies.map(async (reply) => {
                     const replyLikes = await window.supabaseAPI.get('likes', {
-                        'comment_uuid': `eq.${reply.uuid}`,
-                        'select': 'count'
+                        'comment_uuid': `eq.${reply.uuid}`
                     });
                     
                     const replyUserLiked = await window.supabaseAPI.get('likes', {
@@ -130,48 +140,48 @@
 
                     return {
                         uuid: reply.uuid,
-                        nama: reply.name,
-                        hadir: reply.presence,
-                        komentar: reply.comment,
+                        name: reply.name,
+                        presence: reply.presence,
+                        comment: reply.comment,
                         ip: reply.ip_address,
+                        user_agent: reply.user_agent,
                         is_admin: reply.is_admin,
+                        is_parent: false,
+                        gif_url: reply.gif_url,
                         created_at: reply.created_at,
-                        love: replyLikes.length || 0,
-                        is_loved: replyUserLiked.length > 0,
-                        own: false,
+                        like_count: replyLikes.length || 0,
                         comments: []
                     };
                 }));
 
                 return {
                     uuid: comment.uuid,
-                    nama: comment.name,
-                    hadir: comment.presence,
-                    komentar: comment.comment,
+                    name: comment.name,
+                    presence: comment.presence,
+                    comment: comment.comment,
                     ip: comment.ip_address,
+                    user_agent: comment.user_agent,
                     is_admin: comment.is_admin,
+                    is_parent: true,
+                    gif_url: comment.gif_url,
                     created_at: comment.created_at,
-                    love: likes.length || 0,
-                    is_loved: userLiked.length > 0,
-                    own: false,
+                    like_count: likes.length || 0,
                     comments: transformedReplies
                 };
             }));
 
             return createResponse({
-                code: 200,
                 data: {
-                    lists: lists,
-                    hasMore: response.length === per
+                    count: totalCount,
+                    lists: lists
                 }
             });
 
         } catch (error) {
             console.error('Error fetching comments:', error);
             return createResponse({
-                code: 500,
-                data: { lists: [], hasMore: false }
-            });
+                data: { count: 0, lists: [] }
+            }, 500, 'Error');
         }
     }
 
@@ -179,7 +189,7 @@
     async function handlePostComment(request) {
         if (!isSupabaseConfigured()) {
             console.warn('[API Adapter] Supabase not configured');
-            return createResponse({ code: 400, data: { message: 'Backend not configured' } }, 400);
+            return createResponse({ data: { message: 'Backend not configured' } }, 400, 'Bad Request');
         }
 
         try {
@@ -188,12 +198,16 @@
             
             const ip = await getClientIP();
 
+            const presenceValue = typeof body.presence === 'boolean'
+                ? (body.presence ? 1 : 2)
+                : (body.presence != null ? parseInt(body.presence) : 0);
+
             const data = {
-                name: body.nama || 'Anonymous',
-                presence: parseInt(body.hadir) || 0,
-                comment: body.komentar || '',
-                gif_url: body.gif_url || null,
-                parent_uuid: body.uuid || null,
+                name: body.name || body.nama || 'Anonymous',
+                presence: Number.isNaN(presenceValue) ? 0 : presenceValue,
+                comment: body.comment || body.komentar || '',
+                gif_url: body.gif_url || body.gif_id || null,
+                parent_uuid: body.id || body.uuid || null,
                 ip_address: ip,
                 user_agent: navigator.userAgent,
                 is_admin: false
@@ -206,35 +220,37 @@
             const newComment = result[0];
 
             const responseData = {
-                code: 200,
                 data: {
                     uuid: newComment.uuid,
-                    nama: newComment.name,
-                    hadir: newComment.presence,
-                    komentar: newComment.comment,
+                    name: newComment.name,
+                    presence: newComment.presence,
+                    comment: newComment.comment,
                     ip: newComment.ip_address,
+                    user_agent: newComment.user_agent,
                     is_admin: newComment.is_admin,
+                    is_parent: !newComment.parent_uuid,
+                    gif_url: newComment.gif_url,
                     created_at: newComment.created_at,
-                    love: 0,
-                    is_loved: false,
+                    like_count: 0,
+                    comments: [],
                     own: true
                 }
             };
 
             console.log('[API Adapter] Returning response:', responseData);
-            return createResponse(responseData);
+            return createResponse(responseData, 201, 'Created');
 
         } catch (error) {
             console.error('[API Adapter] Error creating comment:', error);
             console.error('[API Adapter] Error stack:', error.stack);
-            return createResponse({ code: 500, data: { message: error.message } }, 500);
+            return createResponse({ data: { message: error.message } }, 500, 'Error');
         }
     }
 
     // Handle PATCH /api/comment/:uuid - update comment
     async function handleUpdateComment(request, uuid) {
         if (!isSupabaseConfigured()) {
-            return createResponse({ code: 400, data: { status: false } }, 400);
+            return createResponse({ data: { status: false } }, 400, 'Bad Request');
         }
 
         try {
@@ -252,53 +268,77 @@
             await window.supabaseAPI.patch('comments', uuid, data);
 
             return createResponse({
-                code: 200,
                 data: { status: true }
             });
 
         } catch (error) {
             console.error('Error updating comment:', error);
-            return createResponse({ code: 500, data: { status: false } }, 500);
+            return createResponse({ data: { status: false } }, 500, 'Error');
         }
     }
 
     // Handle DELETE /api/comment/:uuid - delete comment
     async function handleDeleteComment(uuid) {
         if (!isSupabaseConfigured()) {
-            return createResponse({ code: 400, data: { status: false } }, 400);
+            return createResponse({ data: { status: false } }, 400, 'Bad Request');
         }
 
         try {
             await window.supabaseAPI.delete('comments', uuid);
 
             return createResponse({
-                code: 200,
                 data: { status: true }
             });
 
         } catch (error) {
             console.error('Error deleting comment:', error);
-            return createResponse({ code: 500, data: { status: false } }, 500);
+            return createResponse({ data: { status: false } }, 500, 'Error');
         }
     }
 
     // Handle like/unlike
     async function handleLike(request, uuid) {
         if (!isSupabaseConfigured()) {
-            return createResponse({ code: 400, data: { status: false } }, 400);
+            return createResponse({ data: { status: false } }, 400, 'Bad Request');
         }
 
         try {
-            const result = await window.supabaseAPI.likeComment(uuid);
+            const ip = await getClientIP();
+            const likeInsert = await window.supabaseAPI.post('likes', {
+                comment_uuid: uuid,
+                ip_address: ip
+            });
 
             return createResponse({
-                code: 200,
-                data: { status: true }
-            });
+                data: { uuid: likeInsert[0]?.id || likeInsert[0]?.uuid || uuid }
+            }, 201, 'Created');
 
         } catch (error) {
             console.error('Error toggling like:', error);
-            return createResponse({ code: 500, data: { status: false } }, 500);
+            return createResponse({ data: { status: false } }, 500, 'Error');
+        }
+    }
+
+    // Handle unlike (PATCH /api/comment/:likeId)
+    async function handleUnlike(likeId) {
+        if (!isSupabaseConfigured()) {
+            return createResponse({ data: { status: false } }, 400, 'Bad Request');
+        }
+
+        try {
+            const response = await originalFetch(`${window.supabaseAPI.url}/likes?id=eq.${likeId}`, {
+                method: 'DELETE',
+                headers: window.supabaseAPI.headers
+            });
+
+            if (!response.ok) {
+                throw new Error(`Unlike error: ${response.statusText}`);
+            }
+
+            return createResponse({ data: { status: true } });
+        } catch (error) {
+            console.error('Error unliking comment:', error);
+            return createResponse({ data: { status: false } }, 500, 'Error');
         }
     }
 
@@ -342,7 +382,15 @@
                 const uuid = commentMatch[1];
                 const method = options.method || 'GET';
 
-                if (method === 'PATCH' || method === 'PUT') {
+                if (method === 'PATCH') {
+                    const hasBody = options.body != null && String(options.body).length > 0;
+                    if (!hasBody) {
+                        return handleUnlike(uuid);
+                    }
+                    return handleUpdateComment(new Request(url, options), uuid);
+                }
+
+                if (method === 'PUT') {
                     return handleUpdateComment(new Request(url, options), uuid);
                 }
                 
