@@ -69,6 +69,7 @@
         <button onclick="testTables()">2. Test Tables Exist</button>
         <button onclick="testInsert()">3. Test Insert Comment</button>
         <button onclick="testRead()">4. Test Read Comments</button>
+        <button onclick="checkProjectStatus()">5. Check Project Status</button>
         <button onclick="clearLog()">Clear Log</button>
         
         <div id="log"></div>
@@ -104,24 +105,55 @@
 
         async function testConnection() {
             log('Testing connection to Supabase...', 'info');
+            log(`URL: ${url}`, 'info');
+            log(`Key: ${key.substring(0, 20)}...`, 'info');
+            
             try {
                 const response = await fetch(url, {
+                    method: 'GET',
                     headers: {
                         'apikey': key,
-                        'Authorization': `Bearer ${key}`
+                        'Authorization': `Bearer ${key}`,
+                        'Content-Type': 'application/json'
                     }
                 });
+                
+                log(`Response status: ${response.status}`, 'info');
+                log(`Response statusText: ${response.statusText}`, 'info');
                 
                 if (response.ok) {
                     log('✅ Connection successful!', 'success');
                     showStatus('✅ Connected to Supabase', 'success');
+                    const text = await response.text();
+                    log(`Response body: ${text.substring(0, 200)}`, 'info');
                 } else {
                     log(`❌ Connection failed: ${response.status} ${response.statusText}`, 'error');
+                    const text = await response.text();
+                    log(`Error body: ${text}`, 'error');
                     showStatus('❌ Connection failed', 'error');
                 }
             } catch (error) {
                 log(`❌ Error: ${error.message}`, 'error');
-                showStatus('❌ Connection error', 'error');
+                log(`Error type: ${error.name}`, 'error');
+                log(`Error stack: ${error.stack}`, 'error');
+                
+                // Additional debugging
+                log('--- Debugging Info ---', 'info');
+                log(`Current URL: ${window.location.href}`, 'info');
+                log(`Origin: ${window.location.origin}`, 'info');
+                log(`Is HTTPS: ${window.location.protocol === 'https:'}`, 'info');
+                
+                if (error.message.includes('Failed to fetch')) {
+                    log('⚠️ This is likely a CORS or network error', 'error');
+                    log('Possible causes:', 'info');
+                    log('1. Supabase project is paused (free tier auto-pauses)', 'info');
+                    log('2. CORS policy blocking the request', 'info');
+                    log('3. Invalid URL or credentials', 'info');
+                    log('4. Network/firewall blocking Supabase', 'info');
+                    showStatus('❌ Failed to fetch - Check if Supabase project is active!', 'error');
+                } else {
+                    showStatus('❌ Connection error', 'error');
+                }
             }
         }
 
@@ -212,6 +244,31 @@
                 log(`❌ Read failed: ${error.message}`, 'error');
                 showStatus('❌ Read failed', 'error');
             }
+        }
+
+        async function checkProjectStatus() {
+            log('Checking Supabase project status...', 'info');
+            log('Opening Supabase dashboard...', 'info');
+            
+            const projectId = 'adnooupemxlhgydtvoeo';
+            const dashboardUrl = `https://supabase.com/dashboard/project/${projectId}`;
+            
+            log(`Project ID: ${projectId}`, 'info');
+            log(`Dashboard URL: ${dashboardUrl}`, 'info');
+            log('', 'info');
+            log('Please check:', 'warning');
+            log('1. Is the project ACTIVE (not paused)?', 'warning');
+            log('2. Go to Settings > API - verify URL and keys', 'warning');
+            log('3. Go to Database > Tables - check if "comments" table exists', 'warning');
+            log('4. Go to Authentication > Policies - check RLS settings', 'warning');
+            
+            // Try to open dashboard
+            const openDashboard = confirm('Open Supabase dashboard in new tab?');
+            if (openDashboard) {
+                window.open(dashboardUrl, '_blank');
+            }
+            
+            showStatus('⚠️ Check Supabase dashboard manually', 'warning');
         }
 
         // Auto-run basic test
