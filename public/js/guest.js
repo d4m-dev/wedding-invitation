@@ -1679,7 +1679,7 @@
             g = async () => {
                 let m = document.querySelectorAll(".slide-desktop");
                 if (!m || m.length === 0) return;
-                let i = document.getElementById("root")?.querySelector(".d-sm-block");
+                let i = document.getElementById("root")?.querySelector(".d-lg-block");
                 if (!i || (i.dispatchEvent(new Event("undangan.slide.stop")), window.getComputedStyle(i).display === "none")) return;
                 if (m.length === 1) {
                     d.changeOpacity(m[0], !0);
