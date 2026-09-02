@@ -1,4 +1,19 @@
-# 🚀 Hướng Dẫn Nhanh - Thiết Lập Backend Supabase
+# 🚀 Hướng Dẫn Nhanh - Thiết Lập Backend
+
+## Cách nhanh nhất: chạy backend Node.js có sẵn (không cần Supabase)
+
+```bash
+node server.js
+```
+
+Xong — mở http://127.0.0.1:8080. Không cần `npm install`, không cần tài khoản gì cả.
+Chạy trên điện thoại Android: xem [TERMUX.md](TERMUX.md).
+
+Phần bên dưới chỉ dành cho ai muốn dùng **Supabase** (không cần chạy server).
+
+---
+
+# Thiết Lập Backend Supabase
 
 ## Tóm Tắt 3 Bước
 
@@ -28,27 +43,24 @@
    - **URL**: phần "Project URL" (VD: `https://abc123xyz.supabase.co`)
    - **KEY**: phần "anon public" (key dài, bắt đầu `eyJ...`)
 
-3. Mở file `index.html` trong project này
-4. Tìm dòng 75, thay đổi:
+3. Mở file **`public/metadata.js`** (đây là file cấu hình DUY NHẤT của dự án)
+4. Sửa mục `backend`:
 
-```html
-<!-- TRƯỚC (dòng 75-79) -->
-<body 
-    data-url="YOUR_SUPABASE_URL/rest/v1" 
-    data-key="YOUR_SUPABASE_KEY"
-    ...>
+```js
+window.WEDDING_CONFIG = {
 
-<!-- SAU (thay bằng thông tin của bạn) -->
-<body 
-    data-url="https://abc123xyz.supabase.co/rest/v1" 
-    data-key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3M..."
-    ...>
+    backend: {
+        supabaseUrl: "https://abc123xyz.supabase.co/rest/v1",
+        supabaseAnonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3M...",
+        // ...
+    },
 ```
 
 **LƯU Ý**: 
 - URL phải kết thúc bằng `/rest/v1`
 - Key dài ~200-300 ký tự
-- Không có dấu ngoặc kép hoặc khoảng trắng thừa
+- Không cần sửa `index.html`, `dashboard.html`, `api/*.js` hay `dist/*.js` — tất cả đều đọc từ `metadata.js`
+- Muốn kiểm tra nhanh: mở `test-supabase.html`
 
 ### Bước 4️⃣: Deploy (30 giây)
 

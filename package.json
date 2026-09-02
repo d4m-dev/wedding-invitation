@@ -1,0 +1,28 @@
+{
+  "name": "wedding-invitation",
+  "version": "1.0.0",
+  "description": "Thiệp cưới số có sổ lời chúc — backend Node.js thuần (zero dependency), chạy được trên Termux",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node scripts/verify-metadata.js && bash scripts/api-test.sh",
+    "test:front": "node scripts/verify-metadata.js",
+    "test:api": "bash scripts/api-test.sh"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "wedding",
+    "invitation",
+    "guestbook",
+    "nodejs",
+    "termux",
+    "zero-dependency"
+  ],
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}

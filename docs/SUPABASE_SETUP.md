@@ -83,23 +83,29 @@ $$ LANGUAGE SQL STABLE;
 
 ## Bước 4: Cấu Hình Website
 
-1. Mở file `index.html`
-2. Tìm dòng có comment `<!--<body data-key="" data-url=""...`
-3. Bỏ comment và điền thông tin:
+1. Mở file **`public/metadata.js`** — file cấu hình duy nhất của dự án
+2. Sửa mục `backend`:
 
-```html
-<body 
-  data-url="https://YOUR-PROJECT-URL.supabase.co/rest/v1" 
-  data-key="YOUR-ANON-PUBLIC-KEY"
-  data-audio="./assets/music/weddingsongs_ido.mp3" 
-  data-confetti="true" 
-  data-time="2026-12-22 07:30:00">
+```js
+window.WEDDING_CONFIG = {
+    backend: {
+        supabaseUrl: "https://YOUR-PROJECT-URL.supabase.co/rest/v1",
+        supabaseAnonKey: "YOUR-ANON-PUBLIC-KEY",
+        guestKey: "public-guest",      // công tắc bật mục "Lời chúc"
+        enableGuestbook: true,
+        tables: { comments: "comments", likes: "likes" },
+        ipLookupUrl: "https://api.ipify.org?format=json",
+        geoLookupUrl: "https://apip.cc/api-json/{ip}",
+        docsUrl: "https://supabase.com"
+    },
 ```
 
 **Lưu ý**: 
 - Thay `YOUR-PROJECT-URL` bằng URL project của bạn
 - Thay `YOUR-ANON-PUBLIC-KEY` bằng anon key của bạn
 - URL phải có `/rest/v1` ở cuối
+- Tên bảng trong `tables` phải trùng với tên bảng bạn tạo ở Bước 2
+- Ngày giờ, nhạc, pháo giấy... nằm ở mục `wedding` / `media` / `ui` cùng file
 
 ## Bước 5: Deploy
 

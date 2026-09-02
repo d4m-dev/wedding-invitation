@@ -557,9 +557,9 @@
         tab: l => window.bootstrap.Tab.getOrCreateInstance(document.getElementById(l)),
         modal: l => window.bootstrap.Modal.getOrCreateInstance(document.getElementById(l))
     };
-    var Ce = "https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css",
-        Ie = "https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js",
-        Se = "https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.js",
+    var Ce = window.WEDDING_CONFIG.cdn.runtime.aosCss,
+        Ie = window.WEDDING_CONFIG.cdn.runtime.aosJs,
+        Se = window.WEDDING_CONFIG.cdn.runtime.confettiJs,
         Be = n => {
             let s = () => n.get(Ce).then(r => new Promise((g, o) => {
                     let c = document.createElement("link");
@@ -932,9 +932,9 @@
             },
             u = (h, f, A) => {
                 A = {
-                    media_filter: "tinygif",
-                    client_key: "undangan_app",
-                    key: o.get("tenor_key"),
+                    media_filter: window.WEDDING_CONFIG.thirdParty.gif.mediaFilter,
+                    client_key: window.WEDDING_CONFIG.thirdParty.gif.clientKey,
+                    key: o.get("tenor_key") || window.WEDDING_CONFIG.thirdParty.gif.apiKey,
                     country: J.getCountry(),
                     locale: J.getLocale(),
                     ...A ?? {}
@@ -945,7 +945,7 @@
                     j = new Promise(H => {
                         N.reqs.push(H)
                     });
-                N.last = F(U, `https://tenor.googleapis.com/v2${f}?${M}`).withCache().withRetry().withCancel(j).default(oe).then(H => H.json()).then(H => {
+                N.last = F(U, `${window.WEDDING_CONFIG.thirdParty.gif.endpoint}${f}?${M}`).withCache().withRetry().withCancel(j).default(oe).then(H => H.json()).then(H => {
                     if (H.error) throw new Error(H.error.message);
                     return H.results.length === 0 ? H : (N.next = H?.next, D.until(H.results.length), N.gifs.push(...H.results), l.run(c(h, H.results, D), j))
                 }).catch(H => {
@@ -1435,7 +1435,7 @@
                     let a = document.getElementById(`ip-${d.escapeHtml(i.uuid)}`);
                     d.safeInnerHTML(a, `<i class="fa-solid fa-location-dot me-1"></i>${d.escapeHtml(i.ip)} <strong>${d.escapeHtml(t)}</strong>`)
                 };
-                await F(U, `https://apip.cc/api-json/${i.ip}`).withCache().withRetry().default().then(t => t.json()).then(t => {
+                await F(U, window.WEDDING_CONFIG.backend.geoLookupUrl.replace("{ip}", i.ip)).withCache().withRetry().default().then(t => t.json()).then(t => {
                     let a = "localhost";
                     t.status === "success" && (t.City.length !== 0 && t.RegionName.length !== 0 ? a = t.City + " - " + t.RegionName : t.Capital.length !== 0 && t.CountryName.length !== 0 && (a = t.Capital + " - " + t.CountryName)), e(a)
                 }).catch(t => e(t.message))
@@ -1639,7 +1639,7 @@
         let n = null,
             s = null,
             l = () => {
-                let w = new Date(document.body.getAttribute("data-time").replace(" ", "T")).getTime(),
+                let w = new Date(document.body.getAttribute("data-time").replace(" ", "T") + window.WEDDING_CONFIG.wedding.timezone.offset).getTime(),
                     m = L => L < 10 ? `0${L}` : `${L}`,
                     i = document.getElementById("day"),
                     e = document.getElementById("hour"),
@@ -1711,15 +1711,16 @@
                     w.hasAttribute("data-class") && d.timeOut(() => w.classList.add(w.getAttribute("data-class")), parseInt(w.getAttribute("data-time")))
                 })
             }, k = () => {
-                let w = e => new Date(e.replace(" ", "T") + ":00Z").toISOString().replace(/[-:]/g, "").split(".").shift(),
-                    m = new URL("https://calendar.google.com/calendar/render"),
+                let _W = window.WEDDING_CONFIG,
+                    w = e => e.replace(" ", "T").replace(/[-:]/g, ""),
+                    m = new URL(_W.calendar.endpoint),
                     i = new URLSearchParams({
                         action: "TEMPLATE",
-                        text: "The Wedding of Thừa Ân and [Người Thương]",
-                        dates: `${w("2026-12-22 07:30")}/${w("2026-12-22 10:00")}`,
-                        details: "Với tất cả lòng trân trọng, chúng tôi trân trọng kính mời quý vị đến dự lễ thành hôn của chúng tôi. Xin chân thành cảm ơn sự quan tâm và những lời chúc phúc của quý vị - đó là niềm hạnh phúc và vinh dự lớn lao đối với chúng tôi.",
-                        location: "180A, ấp Đường Gỗ Vàm, xã Long Thạnh, tỉnh An Giang.",
-                        ctz: s.get("Asia/Ho_Chi_Minh")
+                        text: _W.calendar.title,
+                        dates: `${w(_W.calendar.start)}/${w(_W.calendar.end)}`,
+                        details: _W.calendar.details,
+                        location: _W.venue.address,
+                        ctz: _W.wedding.timezone.name
                     });
                 m.search = i.toString(), document.querySelector("#home button")?.addEventListener("click", () => window.open(m, "_blank"))
             }, p = () => (S.add(), {

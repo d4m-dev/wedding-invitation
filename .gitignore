@@ -17,9 +17,19 @@ Thumbs.db
 *.log
 npm-debug.log*
 
-# Optional: Uncomment if you don't want to commit dist/
-# dist/
+# (không còn thư mục dist/ — code trình duyệt nằm trong public/js/)
 
 # Temporary files
 *.tmp
 *.temp
+
+# Node
+node_modules/
+package-lock.json
+
+# Du lieu runtime cua server.js (loi chuc, tai khoan quan tri)
+data/
+server.log
+
+# File zip dong goi de tai ve (khong dua vao git)
+*.zip

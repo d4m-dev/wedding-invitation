@@ -57,6 +57,9 @@
         .log-success { color: #0f0; }
         .log-info { color: #0ff; }
     </style>
+    <!-- NGUỒN CẤU HÌNH DUY NHẤT: metadata.js (nạp luôn api/supabase-api.js) -->
+    <script>window.WEDDING_PAGE = "test";</script>
+    <script src="./metadata.js"></script>
 </head>
 <body>
     <div class="container">
@@ -75,7 +78,6 @@
         <div id="log"></div>
     </div>
 
-    <script src="./api/supabase-api.js"></script>
     <script>
         const log = (message, type = 'info') => {
             const logDiv = document.getElementById('log');
@@ -96,12 +98,15 @@
             statusDiv.textContent = message;
         };
 
-        // Auto-init Supabase
-        const url = 'https://adnooupemxlhgydtvoeo.supabase.co/rest/v1';
-        const key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkbm9vdXBlbXhsaGd5ZHR2b2VvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3NTI4NTgsImV4cCI6MjA4NDMyODg1OH0.O5GUKGW3TVDGbcVvFUJZ08F_BbG9fhf5VlgIyBApjLU';
-        
-        window.supabaseAPI.init(url, key);
-        log('Supabase API initialized', 'success');
+        // Đọc cấu hình từ metadata.js — không hardcode ở đây
+        const url = window.WEDDING_CONFIG.backend.supabaseUrl;
+        const key = window.WEDDING_CONFIG.backend.supabaseAnonKey;
+
+        // api/supabase-api.js được metadata.js nạp động, nên chờ DOM sẵn sàng
+        document.addEventListener('DOMContentLoaded', () => {
+            window.supabaseAPI.init(url, key);
+            log('Supabase API initialized', 'success');
+        });
 
         async function testConnection() {
             log('Testing connection to Supabase...', 'info');
@@ -250,8 +255,8 @@
             log('Checking Supabase project status...', 'info');
             log('Opening Supabase dashboard...', 'info');
             
-            const projectId = 'adnooupemxlhgydtvoeo';
-            const dashboardUrl = `https://supabase.com/dashboard/project/${projectId}`;
+            const projectId = new URL(window.WEDDING_CONFIG.backend.supabaseUrl).hostname.split('.')[0];
+            const dashboardUrl = `${window.WEDDING_CONFIG.backend.docsUrl}/dashboard/project/${projectId}`;
             
             log(`Project ID: ${projectId}`, 'info');
             log(`Dashboard URL: ${dashboardUrl}`, 'info');
@@ -271,11 +276,13 @@
             showStatus('⚠️ Check Supabase dashboard manually', 'warning');
         }
 
-        // Auto-run basic test
-        setTimeout(() => {
-            log('=== Auto-running basic tests ===', 'info');
-            testConnection().then(() => testTables());
-        }, 500);
+        // Auto-run basic test (chờ DOM + api/supabase-api.js nạp xong)
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                log('=== Auto-running basic tests ===', 'info');
+                testConnection().then(() => testTables());
+            }, 500);
+        });
     </script>
 </body>
 </html>

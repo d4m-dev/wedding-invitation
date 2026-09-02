@@ -49,12 +49,13 @@
      ✓ Project URL
      ✓ anon public key
    
-🎯 BƯỚC 4: Cấu Hình index.html
+🎯 BƯỚC 4: Cấu Hình metadata.js
    
-   • Mở file index.html (dòng 75-79)
-   • Thay:
-     - YOUR_SUPABASE_URL → URL của bạn
-     - YOUR_SUPABASE_KEY → anon key của bạn
+   • Mở file public/metadata.js — file cấu hình DUY NHẤT
+   • Sửa mục backend:
+     - supabaseUrl     → URL của bạn (kết thúc bằng /rest/v1)
+     - supabaseAnonKey → anon key của bạn
+   • Không cần sửa public/index.html / dashboard.html / js
    
 🎯 BƯỚC 5: Deploy
    
