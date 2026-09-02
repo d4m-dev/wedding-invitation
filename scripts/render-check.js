@@ -49,7 +49,7 @@ if (aos && conf) {
 
 let html = fs.readFileSync(path.join(PUB, 'index.html'), 'utf8');
 // nạp metadata.js và guest.js inline theo đúng thứ tự thực thi của trình duyệt
-html = html.replace('<script src="./metadata.js"></script>',
+html = html.replace('<script src="./metadata.js?v=20260902"></script>',
     '<script>' + fs.readFileSync(path.join(PUB, 'metadata.js'), 'utf8') + '</script>');
 html = html.replace('</body>',
     '<script>' + fs.readFileSync(path.join(PUB, 'js/guest.js'), 'utf8') + '</script></body>');

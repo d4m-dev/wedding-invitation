@@ -9,7 +9,7 @@ const META = fs.readFileSync(path.resolve('public/metadata.js'), 'utf8');
 async function run(file, transform) {
     const meta = transform ? transform(META) : META;
     const html = fs.readFileSync(path.resolve(file), 'utf8')
-        .replace('<script src="./metadata.js"></script>', '<script>' + meta + '</script>');
+        .replace('<script src="./metadata.js?v=20260902"></script>', '<script>' + meta + '</script>');
     const dom = new JSDOM(html, {
         runScripts: 'dangerously',
         pretendToBeVisual: true,
@@ -134,7 +134,7 @@ function has(label, actual, needle) {
     chk('title', t.title, 'Kiểm tra kết nối Supabase');
     chk('khong nap CDN css', t.querySelectorAll('link[rel="stylesheet"]').length, 0);
     const rawTest = fs.readFileSync(path.resolve('public/test-supabase.html'), 'utf8');
-    has('metadata.js duoc nap trong <head>', rawTest.includes('<script src="./metadata.js"></script>'), true);
+    has('metadata.js duoc nap trong <head>', rawTest.includes('<script src="./metadata.js?v=20260902"></script>'), true);
     chk('khong con url/key hardcode', /supabase\.co|eyJhbGci/.test(rawTest), false);
     chk('mode=node -> khong tiem script ngoai', [...t.querySelectorAll('script[src]')].length, 0);
     console.log('       (jsdom khong tai script ngoai, nen window.supabaseAPI undefined o day — binh thuong)');
