@@ -31,5 +31,6 @@ package-lock.json
 data/
 server.log
 
-# File zip dong goi de tai ve (khong dua vao git)
-*.zip
+# Ban zip DAY DU (19MB) trung lap voi assets da co trong repo -> khong commit.
+# Ban code-only thi duoc commit de luon tai ve duoc.
+/wedding-invitation.zip
