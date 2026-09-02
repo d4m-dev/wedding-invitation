@@ -145,6 +145,8 @@ setTimeout(() => {
         console.log(`${ok ? 'PASS' : 'FAIL'} | ${name} = ${JSON.stringify(got)}`);
     };
     console.log(`\n=== render-check (MODE=${MODE}) ===`);
+    chk('data-bs-theme đã phân giải (light/dark, không còn auto)', /light|dark/.test(w.document.documentElement.getAttribute('data-bs-theme')), true);
+    console.log('       data-bs-theme =', w.document.documentElement.getAttribute('data-bs-theme'));
     chk('#root không còn opacity-0 (trang hiện ra)', visible, true);
     chk('progress.done đã bắn', done, true);
     console.log(`       số mục lỗi được bỏ qua: ${skipped}`);

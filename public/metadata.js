@@ -420,6 +420,9 @@ window.WEDDING_CONFIG = {
      * A. PHẦN <head> — chạy NGAY khi file này được nạp (chưa parse <body>)
      * =================================================================== */
     function applyHead() {
+        // Dat theme som; guest.js se tu phan giai "auto" -> light/dark ngay sau do.
+        // KHONG gan lai trong applyBody ( chay sau) vi se ghi de ket qua phan giai.
+        document.documentElement.setAttribute("data-bs-theme", C.ui.theme);
         // gộp cấu hình chung (site) với cấu hình riêng của trang hiện tại
         var s = {};
         Object.keys(C.site).forEach(function (k) { s[k] = C.site[k]; });
@@ -525,7 +528,6 @@ window.WEDDING_CONFIG = {
         body.setAttribute("data-audio", C.media.music);
         body.setAttribute("data-confetti", String(!!C.ui.confetti));
         body.setAttribute("data-time", C.wedding.date.datetime);
-        document.documentElement.setAttribute("data-bs-theme", C.ui.theme);
 
         /* --- 2. điền giá trị vào các thẻ có data-config* --- */
         document.querySelectorAll("[data-config]").forEach(function (node) {
