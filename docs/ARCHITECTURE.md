@@ -129,11 +129,16 @@ Xác thực:
 ## 7. Kiểm thử
 
 ```bash
-npm install jsdom                 # chỉ test front cần jsdom; server thì không
-node scripts/verify-metadata.js   # 65 kiểm tra: metadata.js + HTML thật trong jsdom
+npm install jsdom --no-save       # chỉ test front/render cần jsdom; server thì không
+node scripts/verify-metadata.js   # 67 kiểm tra: metadata.js + HTML thật trong jsdom
 bash scripts/api-test.sh          # 63 kiểm tra: HTTP thật (cần server đang chạy)
-npm test                          # chạy cả hai
+node scripts/render-check.js      # mở trang thật trong jsdom, khẳng định #root hiện ra
+npm test                          # chạy cả ba
 ```
+
+`render-check.js` là test hồi quy cho lỗi "trang trắng": `<div id="root">` mang
+`opacity-0` và chỉ hiện ra khi `undangan.progress.done` bắn. Chạy mặc định ở
+`MODE=BLOCKED` (mọi CDN/host ngoài đều chết) để chắc chắn trang **vẫn** hiện ra.
 
 ## 8. Đổi backend
 

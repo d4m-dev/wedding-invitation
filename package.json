@@ -7,9 +7,10 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "node scripts/verify-metadata.js && bash scripts/api-test.sh",
+    "test": "node scripts/verify-metadata.js && bash scripts/api-test.sh && node scripts/render-check.js",
     "test:front": "node scripts/verify-metadata.js",
-    "test:api": "bash scripts/api-test.sh"
+    "test:api": "bash scripts/api-test.sh",
+    "test:render": "node scripts/render-check.js"
   },
   "engines": {
     "node": ">=18"

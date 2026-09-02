@@ -330,9 +330,9 @@ window.WEDDING_CONFIG = {
         video: "./assets/video/265501_tiny.mp4",
         // Ảnh nền chế độ desktop (3 ảnh chạy slideshow)
         desktopSlides: [
-            "https://picsum.photos/1000/1000?random=7",
-            "https://picsum.photos/1000/1000?random=8",
-            "https://picsum.photos/1000/1000?random=9"
+            "./assets/images/banner.webp",
+            "./assets/images/cowo.webp",
+            "./assets/images/cewe.webp"
         ],
         // Ảnh trong mục "Khoảnh Khắc"
         gallery: [
@@ -342,9 +342,9 @@ window.WEDDING_CONFIG = {
         ],
         // Ảnh trong mục "Câu Chuyện Tình Yêu"
         storySlides: [
-            "https://picsum.photos/1280/720?random=4",
-            "https://picsum.photos/1280/720?random=5",
-            "https://picsum.photos/1280/720?random=6"
+            "./assets/images/img-1.jpg",
+            "./assets/images/img-2.jpg",
+            "./assets/images/img-3.jpg"
         ]
     },
 

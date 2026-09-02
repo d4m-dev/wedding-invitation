@@ -100,7 +100,19 @@ function has(label, actual, needle) {
     chk('ngan hang', txt('[data-config="gifts.bank.bankName"]'), 'Vietcombank');
     chk('copy so TK', q('[data-config-attr="data-copy:gifts.bank.number"]').getAttribute('data-copy'), '1017969359');
     chk('copy dia chi', q('[data-config-attr="data-copy:gifts.gift.address"]').getAttribute('data-copy'), '180A, ấp Đường Gỗ Vàm, xã Long Thạnh, tỉnh An Giang.');
-    chk('slide desktop #3', q('[data-config-index="2"]').getAttribute('data-src'), 'https://picsum.photos/1000/1000?random=9');
+    chk('slide desktop #3', q('[data-config-index="2"]').getAttribute('data-src'), './assets/images/cewe.webp');
+
+    /* --- khong duoc phu thuoc host anh ben ngoai (picsum...) vi mot host chet
+           se keo theo S.invalid() va co the lam trang khong hien ra --- */
+    (function () {
+        const m = d.defaultView.WEDDING_CONFIG.media;
+        const paths = [m.bg, m.placeholder, m.icon, m.music, m.video,
+            ...m.desktopSlides, ...m.storySlides, ...m.gallery];
+        const external = paths.filter(u => !String(u).startsWith('./assets/'));
+        chk('moi duong dan media deu cuc bo (khong picsum/CDN)', external.length, 0);
+        const missing = paths.filter(u => !fs.existsSync(path.resolve('public', String(u).replace(/^\.\//, ''))));
+        chk('moi file media deu ton tai tren dia', missing.length, 0);
+    })();
     chk('href github', q('[data-config-href="footer.githubUrl"]').getAttribute('href'), 'https://github.com/d4m-dev');
     chk('muc loi chuc con ton tai', !!d.getElementById('comment'), true);
 

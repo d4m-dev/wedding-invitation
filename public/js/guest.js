@@ -13,14 +13,26 @@
             b = () => `(${r}/${l}) [${parseInt(r/l*100).toFixed(0)}%]`;
         return {
             init: () => {
-                n = document.getElementById("progress-info"), s = document.getElementById("progress-bar"), n.classList.remove("d-none"), c = new Promise(p => document.addEventListener("undangan.progress.invalid", p))
+                n = document.getElementById("progress-info"), s = document.getElementById("progress-bar"), n.classList.remove("d-none"), c = new Promise(p => document.addEventListener("undangan.progress.invalid", p)),
+                // Watchdog: khong de trang trang vinh vien neu co muc tai khong bao gio phan hoi
+                window.setTimeout(() => {
+                    o || (s.style.backgroundColor = "orange", n.innerText = "Da bo qua muc tai cham", o = !0, document.dispatchEvent(new Event("undangan.progress.done")))
+                }, 15e3)
             },
             add: x,
             invalid: p => {
-                g && !o && (g = !1, s.style.backgroundColor = "red", n.innerText = `Error loading ${p} ${b()}`, document.dispatchEvent(new Event("undangan.progress.invalid")))
+                // Mot tai nguyen loi (CDN, anh ngoai, nhac) KHONG duoc lam trang ca trang.
+                // Danh dau loi roi van tinh nhu da xong, de progress.done luon duoc ban ra.
+                if (o) return;
+                s.style.backgroundColor = "red";
+                r += 1;
+                n.innerText = `Bo qua muc loi: ${p} ${b()}`;
+                s.style.width = Math.min(r / l * 100, 100).toString() + "%";
+                document.dispatchEvent(new Event("undangan.progress.invalid"));
+                r >= l && (o = !0, document.dispatchEvent(new Event("undangan.progress.done")))
             },
             complete: (p, y = !1) => {
-                g && (r += 1, n.innerText = `Loading ${p} ${y?"skipped":"complete"} ${b()}`, s.style.width = Math.min(r / l * 100, 100).toString() + "%", r === l && (o = !0, document.dispatchEvent(new Event("undangan.progress.done"))))
+                g && (r += 1, n.innerText = `Loading ${p} ${y?"skipped":"complete"} ${b()}`, s.style.width = Math.min(r / l * 100, 100).toString() + "%", r >= l && (o = !0, document.dispatchEvent(new Event("undangan.progress.done"))))
             },
             getAbort: () => c
         }
