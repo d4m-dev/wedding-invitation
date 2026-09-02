@@ -9,11 +9,25 @@
     // Store original fetch
     const originalFetch = window.fetch;
 
-    // Force legacy API base URL to current origin so /api/* calls are intercepted locally
-    const existingDataUrl = document.body.getAttribute('data-url');
-    if (!existingDataUrl || existingDataUrl.includes('supabase.co')) {
-        document.body.setAttribute('data-url', window.location.origin);
+    // NGUỒN CẤU HÌNH DUY NHẤT: metadata.js (window.WEDDING_CONFIG.backend)
+    const backendConfig = () => (window.WEDDING_CONFIG && window.WEDDING_CONFIG.backend) || {};
+    const TABLE = {
+        get comments() { return backendConfig().tables?.comments || 'comments'; },
+        get likes() { return backendConfig().tables?.likes || 'likes'; }
+    };
+
+    // Force legacy API base URL to current origin so /api/* calls are intercepted locally.
+    // File nay duoc nap dong bo (async=false) nen co the chay TRUOC khi <body> ton tai
+    // -> phai phong ve ca 2 truong hop.
+    function ensureLegacyBaseUrl() {
+        if (!document.body) return;
+        const existingDataUrl = document.body.getAttribute('data-url');
+        if (!existingDataUrl || existingDataUrl.includes('supabase.co')) {
+            document.body.setAttribute('data-url', window.location.origin);
+        }
     }
+    ensureLegacyBaseUrl();
+    document.addEventListener('DOMContentLoaded', ensureLegacyBaseUrl);
     
     // Helper to check if Supabase is configured
     function isSupabaseConfigured() {
@@ -23,7 +37,7 @@
     // Get client IP
     async function getClientIP() {
         try {
-            const response = await originalFetch('https://api.ipify.org?format=json');
+            const response = await originalFetch(backendConfig().ipLookupUrl || '');
             const data = await response.json();
             return data.ip;
         } catch {
@@ -93,7 +107,7 @@
             };
 
             // Get parent comments from Supabase
-            const listResponse = await originalFetch(`${supabaseUrl}/comments?select=*&parent_uuid=is.null&order=created_at.desc&limit=${per}&offset=${offset}`, {
+            const listResponse = await originalFetch(`${supabaseUrl}/${TABLE.comments}?select=*&parent_uuid=is.null&order=created_at.desc&limit=${per}&offset=${offset}`, {
                 method: 'GET',
                 headers: supabaseHeaders
             });
@@ -111,29 +125,29 @@
             // Transform to old API format
             const lists = await Promise.all(response.map(async (comment) => {
                 // Get replies
-                const replies = await window.supabaseAPI.get('comments', {
+                const replies = await window.supabaseAPI.get(TABLE.comments, {
                     'parent_uuid': `eq.${comment.uuid}`,
                     'order': 'created_at.asc'
                 });
 
                 // Get like count
-                const likes = await window.supabaseAPI.get('likes', {
+                const likes = await window.supabaseAPI.get(TABLE.likes, {
                     'comment_uuid': `eq.${comment.uuid}`
                 });
 
                 // Check if user liked
-                const userLiked = await window.supabaseAPI.get('likes', {
+                const userLiked = await window.supabaseAPI.get(TABLE.likes, {
                     'comment_uuid': `eq.${comment.uuid}`,
                     'ip_address': `eq.${ip}`
                 });
 
                 // Transform replies
                 const transformedReplies = await Promise.all(replies.map(async (reply) => {
-                    const replyLikes = await window.supabaseAPI.get('likes', {
+                    const replyLikes = await window.supabaseAPI.get(TABLE.likes, {
                         'comment_uuid': `eq.${reply.uuid}`
                     });
                     
-                    const replyUserLiked = await window.supabaseAPI.get('likes', {
+                    const replyUserLiked = await window.supabaseAPI.get(TABLE.likes, {
                         'comment_uuid': `eq.${reply.uuid}`,
                         'ip_address': `eq.${ip}`
                     });
@@ -214,7 +228,7 @@
             };
 
             console.log('[API Adapter] Sending to Supabase:', data);
-            const result = await window.supabaseAPI.post('comments', data);
+            const result = await window.supabaseAPI.post(TABLE.comments, data);
             console.log('[API Adapter] Supabase response:', result);
             
             const newComment = result[0];
@@ -265,7 +279,7 @@
                 data.gif_url = body.gif_url;
             }
 
-            await window.supabaseAPI.patch('comments', uuid, data);
+            await window.supabaseAPI.patch(TABLE.comments, uuid, data);
 
             return createResponse({
                 data: { status: true }
@@ -284,7 +298,7 @@
         }
 
         try {
-            await window.supabaseAPI.delete('comments', uuid);
+            await window.supabaseAPI.delete(TABLE.comments, uuid);
 
             return createResponse({
                 data: { status: true }
@@ -304,7 +318,7 @@
 
         try {
             const ip = await getClientIP();
-            const likeInsert = await window.supabaseAPI.post('likes', {
+            const likeInsert = await window.supabaseAPI.post(TABLE.likes, {
                 comment_uuid: uuid,
                 ip_address: ip
             });
@@ -326,7 +340,7 @@
         }
 
         try {
-            const response = await originalFetch(`${window.supabaseAPI.url}/likes?id=eq.${likeId}`, {
+            const response = await originalFetch(`${window.supabaseAPI.url}/${TABLE.likes}?id=eq.${likeId}`, {
                 method: 'DELETE',
                 headers: window.supabaseAPI.headers
             });

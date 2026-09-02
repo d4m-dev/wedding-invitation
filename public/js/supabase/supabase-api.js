@@ -5,6 +5,26 @@
  * guest.js implementation, using Supabase as the backend.
  */
 
+/**
+ * Đọc cấu hình backend — NGUỒN DUY NHẤT là metadata.js (window.WEDDING_CONFIG)
+ * Thuộc tính data-* trên <body> chỉ là phương án dự phòng.
+ */
+const getBackendConfig = () => (window.WEDDING_CONFIG && window.WEDDING_CONFIG.backend) || {};
+
+const bodyAttr = (name) => (document.body && document.body.getAttribute(name)) || null;
+
+const getBackendUrl = () => getBackendConfig().supabaseUrl
+    || bodyAttr('data-supabase-url')
+    || bodyAttr('data-url');
+
+const getBackendKey = () => getBackendConfig().supabaseAnonKey
+    || bodyAttr('data-supabase-key')
+    || bodyAttr('data-key');
+
+const getIpLookupUrl = () => getBackendConfig().ipLookupUrl || '';
+
+const getDocsUrl = () => getBackendConfig().docsUrl || '';
+
 class SupabaseAPI {
     constructor() {
         this.url = null;
@@ -35,7 +55,7 @@ class SupabaseAPI {
      */
     async getClientIP() {
         try {
-            const response = await fetch('https://api.ipify.org?format=json');
+            const response = await fetch(getIpLookupUrl());
             const data = await response.json();
             return data.ip;
         } catch {
@@ -278,15 +298,15 @@ window.supabaseAPI = new SupabaseAPI();
  * Check if backend is configured
  */
 window.supabaseAPI.isConfigured = function() {
-    const url = document.body.getAttribute('data-supabase-url') || document.body.getAttribute('data-url');
-    const key = document.body.getAttribute('data-supabase-key') || document.body.getAttribute('data-key');
-    return url && key && url.includes('supabase.co');
+    const url = getBackendUrl();
+    const key = getBackendKey();
+    return !!(url && key && !url.includes('YOUR_SUPABASE_URL') && key !== 'YOUR_SUPABASE_KEY');
 };
 
 // Auto-initialize from body attributes when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    const url = document.body.getAttribute('data-supabase-url') || document.body.getAttribute('data-url');
-    const key = document.body.getAttribute('data-supabase-key') || document.body.getAttribute('data-key');
+    const url = getBackendUrl();
+    const key = getBackendKey();
     
     if (url && key && url !== 'YOUR_SUPABASE_URL/rest/v1' && key !== 'YOUR_SUPABASE_KEY') {
         try {
@@ -309,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h5 class="mb-3"><i class="fa-solid fa-triangle-exclamation me-2"></i>Tính năng Guestbook chưa được kích hoạt</h5>
                     <p class="mb-2">Để kích hoạt tính năng để lại lời chúc, vui lòng:</p>
                     <ol class="mb-2">
-                        <li>Tạo tài khoản Supabase miễn phí tại <a href="https://supabase.com" target="_blank" class="alert-link">supabase.com</a></li>
+                        <li>Tạo tài khoản Supabase miễn phí tại <a href="${getDocsUrl()}" target="_blank" class="alert-link">supabase.com</a></li>
                         <li>Làm theo hướng dẫn trong file <strong>QUICK_START_VI.md</strong> (có trong source code)</li>
                         <li>Cấu hình credentials trong file <code>index.html</code></li>
                     </ol>

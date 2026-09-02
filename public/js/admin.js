@@ -786,9 +786,9 @@
             },
             m = (c, i, x) => {
                 x = {
-                    media_filter: "tinygif",
-                    client_key: "undangan_app",
-                    key: p.get("tenor_key"),
+                    media_filter: window.WEDDING_CONFIG.thirdParty.gif.mediaFilter,
+                    client_key: window.WEDDING_CONFIG.thirdParty.gif.clientKey,
+                    key: p.get("tenor_key") || window.WEDDING_CONFIG.thirdParty.gif.apiKey,
                     country: V.getCountry(),
                     locale: V.getLocale(),
                     ...x ?? {}
@@ -799,7 +799,7 @@
                     F = new Promise(M => {
                         U.reqs.push(M)
                     });
-                U.last = P(z, `https://tenor.googleapis.com/v2${i}?${B}`).withCache().withRetry().withCancel(F).default(oe).then(M => M.json()).then(M => {
+                U.last = P(z, `${window.WEDDING_CONFIG.thirdParty.gif.endpoint}${i}?${B}`).withCache().withRetry().withCancel(F).default(oe).then(M => M.json()).then(M => {
                     if (M.error) throw new Error(M.error.message);
                     return M.results.length === 0 ? M : (U.next = M?.next, N.until(M.results.length), U.gifs.push(...M.results), f.run(g(c, M.results, N), F))
                 }).catch(M => {
@@ -1252,7 +1252,7 @@
                     let s = document.getElementById(`ip-${a.escapeHtml(r.uuid)}`);
                     a.safeInnerHTML(s, `<i class="fa-solid fa-location-dot me-1"></i>${a.escapeHtml(r.ip)} <strong>${a.escapeHtml(t)}</strong>`)
                 };
-                await P(z, `https://apip.cc/api-json/${r.ip}`).withCache().withRetry().default().then(t => t.json()).then(t => {
+                await P(z, window.WEDDING_CONFIG.backend.geoLookupUrl.replace("{ip}", r.ip)).withCache().withRetry().default().then(t => t.json()).then(t => {
                     let s = "localhost";
                     t.status === "success" && (t.City.length !== 0 && t.RegionName.length !== 0 ? s = t.City + " - " + t.RegionName : t.Capital.length !== 0 && t.CountryName.length !== 0 && (s = t.Capital + " - " + t.CountryName)), e(s)
                 }).catch(t => e(t.message))
